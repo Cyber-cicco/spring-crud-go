@@ -1,0 +1,21 @@
+{
+    "name": "Prout",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "id",
+            "type": "Long",
+            "options": []
+        },
+        {
+            "name": "caca",
+            "type": "String",
+            "options": []
+        },
+        {
+            "name": "proutList",
+            "type": "List<String>",
+            "options": []
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "mabite",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "bite",
+            "type": "String",
+            "options": []
+        }
+    ]
+}
