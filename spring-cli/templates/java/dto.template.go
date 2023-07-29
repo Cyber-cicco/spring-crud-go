@@ -31,5 +31,6 @@ import lombok.NoArgsConstructor;
    Body :
 `
     private Long id;
+{%fields%}
 `,
 }

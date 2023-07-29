@@ -7,12 +7,13 @@ type DtoOption struct {
 type FieldOption struct {
     Dto DtoOption `json:"dto"`
     Relation string `json:"relation"`
+    Annotations []string
 }
 
 type JpaField struct {
     Name string `json:"name"`
     Type string`json:"type"`
-    Options []FieldOption`json:"options"`
+    Options FieldOption`json:"options"`
 }
 
 type JpaEntity struct{

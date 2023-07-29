@@ -25,7 +25,7 @@ func hydrateEntityFields(entity *entities.JpaEntity, jpaFields []string){
         jpaField := entities.JpaField{
             Name : strings.ReplaceAll(val, "@", ""),
             Type : utils.InfereTypeByName(val),
-            Options : []entities.FieldOption{},
+            Options : entities.FieldOption{},
         }
         entity.Fields = append(entity.Fields, jpaField)
     }

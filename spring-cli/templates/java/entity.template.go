@@ -36,5 +36,11 @@ import lombok.NoArgsConstructor;
 `
     @Id()
     private Long id;      
+{%fields%}
+
 `,
 }
+
+var JavaEntityField string = 
+`    {%annotations%}private {%field_type%} {%field_name%};
+`

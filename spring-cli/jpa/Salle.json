@@ -4,23 +4,19 @@
     "fields": [
         {
             "name": "numero",
-            "type": "String",
-            "options": []
+            "type": "String"
         },
         {
             "name": "cinema",
-            "type": "Cinema",
-            "options": []
+            "type": "Cinema"
         },
         {
             "name": "sieges",
-            "type": "List<Sieges>",
-            "options": []
+            "type": "List<Siege>"
         },
         {
             "name": "capacite",
-            "type": "String",
-            "options": []
+            "type": "String"
         }
     ]
 }

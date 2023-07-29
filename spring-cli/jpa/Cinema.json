@@ -4,18 +4,15 @@
     "fields": [
         {
             "name": "nom",
-            "type": "Double",
-            "options": []
+            "type": "Double"
         },
         {
             "name": "salles",
-            "type": "List<Salles>",
-            "options": []
+            "type": "List<Salle>"
         },
         {
             "name": "adresse",
-            "type": "Adresse",
-            "options": []
+            "type": "Adresse"
         }
     ]
 }

@@ -1,6 +1,6 @@
 {
     "base-package" : "com.example.springgo",
-    "erease-files" : true,
+    "erease-files" : false,
 
     "entity-package" : {
         "package" : "entites",

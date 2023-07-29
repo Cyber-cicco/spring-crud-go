@@ -4,18 +4,15 @@
     "fields": [
         {
             "name": "rue",
-            "type": "String",
-            "options": []
+            "type": "String"
         },
         {
             "name": "ville",
-            "type": "String",
-            "options": []
+            "type": "String"
         },
         {
             "name": "codePostal",
-            "type": "String",
-            "options": []
+            "type": "String"
         }
     ]
 }
