@@ -1,6 +1,7 @@
 package config
 
-var CONFIG Config
+var CONFIG Config  
+
 const RELATIVE_PATH string = "../../"
 const JAVA_PATH string = "src/main/java/"
 
@@ -20,5 +21,5 @@ type Config struct{
 type PackageOption struct{
     Package string `json:"package"`
     PackagePolicy string`json:"package-policy"`
-
+    Suffix string `json:"suffix"`
 }

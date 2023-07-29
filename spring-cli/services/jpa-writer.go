@@ -1,4 +1,4 @@
-package java
+package services
 
 import (
 	"fr.cybercicco/springgo/spring-cli/config"

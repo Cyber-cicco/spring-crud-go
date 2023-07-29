@@ -34,4 +34,19 @@ func Jsonify(entity entities.JpaEntity) []byte{
     return []byte(unformattedJson)
 }
 
-
+func LoadEntityJson() ([]entities.JpaEntity, error){
+    directoryPath := config.CONFIG.JpaJsonFilePath 
+    files, err := ioutil.ReadDir(directoryPath)
+    utils.HandleBasicError(err, "Erreur dans l'ouverture du dossier censé contenir les fichiers de configuration des entités JPA")
+    noEntitiesErr error = nil
+    jpaEntities := []entities.JpaEntity{}
+    for _, file := range files {
+        fmt.Println(file.Name())
+        var jpaEntity entities.JpaEntity
+        data, fileErr := ioutil.ReadFile(directoryPath + file.Name())
+        utils.HandleBasicError(fileErr, "Erreur dans la lecture de fichier de configuration d'une entité JPA")
+        utils.HandleBasicError(json.Unmarshal(data, &jpaEntity), "Erreur dans la lecture des ")
+        jpaEntities = append(jpaEntities, jpaEntity)
+    }
+    return jpaEntities[:], noEntitesErr
+}

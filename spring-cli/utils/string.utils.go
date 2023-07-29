@@ -1,10 +1,15 @@
 package utils
 
+import "unicode"
+
 func ToClassName(s string) string{
-    bs := []byte(s)
-    if len(bs) == 0 {
-        return ""
-    }
-    bs[0] = byte(bs[0] - 32)
-    return string(bs)
+  runes := []rune(s)
+  runes[0] = unicode.ToUpper(runes[0])
+  return string(runes)
+}
+
+func ToAttributeName(s string) string{
+  runes := []rune(s)
+  runes[0] = unicode.ToLower(runes[0])
+  return string(runes)
 }

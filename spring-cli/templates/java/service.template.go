@@ -5,11 +5,19 @@ import (
 )
 
 
-var javaService = entities.BaseJavaClass{
+var JavaService = entities.BaseJavaClass{
 	Packages:     
 ``,
 	Imports:     
-`import java.util.List;`,
+`import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;    
+import {dto_package}.{class_name}{dto_suffix};
+import {mapper_package}.{class_name}{mapper_suffix};
+import {repository_package}.{class_name}{repository_suffix};
+
+import java.util.List;
+`,
 	Annotations:
 `@Service
 @Validated
@@ -19,29 +27,29 @@ var javaService = entities.BaseJavaClass{
 	ClassName: 
 ``,
 	ClassSuffix:
-`Service`,
+``,
 	Implements:
 ``,
 	Extends:
 ``,
 	Body:
 `
-    private final {class_name}Repository {class_name_lower}Repository;
-    private final {class_name}Mapper {class_name_lower}Mapper;
+    private final {class_name}{repository_suffix} {class_name_lower}{repository_suffix};
+    private final {class_name}{mapper_suffix} {class_name_lower}{mapper_suffix};
 
-    public List<{class_name}Dto> supprimer({class_name}Dto dto){
+    public List<{class_name}{dto_suffix}> supprimer({class_name}{dto_suffix} dto){
         return null;
     };
 
-    public List<{class_name}Dto> changer({class_name}Dto dto){
+    public List<{class_name}{dto_suffix}> changer({class_name}{dto_suffix} dto){
         return null;
     }
 
-    public List<{class_name}Dto> recuperer(){
+    public List<{class_name}{dto_suffix}> recuperer(){
         return null;
     }   
 
-    public List<{class_name}Dto> creer({class_name}Dto dto){
+    public List<{class_name}{dto_suffix}> creer({class_name}{dto_suffix} dto){
         return null;
     }
 `,

@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"fr.cybercicco/springgo/spring-cli/daos"
-	"fr.cybercicco/springgo/spring-cli/services/java"
+	"fr.cybercicco/springgo/spring-cli/services"
 	"fr.cybercicco/springgo/spring-cli/utils"
 )
 
@@ -42,13 +42,14 @@ func handleArgs(){
             if *jpaCname == "" || *jpaFieldsString == "" {
                 utils.HandleBasicError(errors.New("args error"), "Erreur : vous devez préciser le nom de l'entité et de ses fields pour utiliser la commande jpa")
             }
-            java.CreateJpaEntity(jpaCname, jpaFields)
+            services.CreateJpaEntity(jpaCname, jpaFields)
         case "ng":
             ngCmd.Parse(os.Args[2:])
             fmt.Println("subcommand 'ng'")
         case "spring":
             springCmd.Parse(os.Args[2:])
             fmt.Println("subcommand 'spring'")
+            services.CreateJavaClasses()
         case "components":
             cmpCmd.Parse(os.Args[2:])
             fmt.Println("subcommand 'components'")
