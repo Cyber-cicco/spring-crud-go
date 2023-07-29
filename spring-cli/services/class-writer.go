@@ -9,27 +9,6 @@ import (
 	"fr.cybercicco/springgo/spring-cli/utils"
 )
 
-var basicTypes = []string{
-    "String",
-    "Long",
-    "Integer",
-    "Boolean",
-    "int",
-    "double",
-    "Double",
-    "Float",
-    "float",
-    "LocaleDate",
-    "LocaleDateTime",
-    "LocaleTime",
-    "Date",
-    "Time",
-    "Instant",
-}
-
-
-
-
 func createJavaFileBytes(javaClass entities.BaseJavaClass) []byte{
     paramsMap := map[string]string {
         "{%package%}" : javaClass.Packages,
