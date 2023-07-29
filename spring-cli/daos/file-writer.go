@@ -6,6 +6,7 @@ import (
 
 	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/entities"
+	"fr.cybercicco/springgo/spring-cli/utils"
 )
 
 func writeFile(bytes []byte, filename string){
@@ -19,7 +20,7 @@ func writeFile(bytes []byte, filename string){
 
 func createNewFile(bytes []byte, filename string){
     f,err := os.OpenFile(filename, os.O_CREATE | os.O_WRONLY, 0660);    
-    fmt.Println(err)
+    utils.HandleBasicError(err, "Erreur dans la création d'un fichier")
     f.Write(bytes)
     f.Sync()
     f.Close()
@@ -44,11 +45,18 @@ func fileExists(dirPath string) error {
         if os.IsNotExist(err) {
             return err
         }
-            return err
+        return err
     }
     return nil
 }
 
 func WriteEntityJson(entity entities.JpaEntity){
     writeFile(entity.FileBytes, entity.FileName)
+}
+
+func WriteJavaClass(directory, filename string, content []byte){
+    if fileExists(directory) != nil {
+        utils.HandleBasicError(os.MkdirAll(directory, 0777), "Erreur dans la création d'un répertoire") 
+    }
+    writeFile(content, directory + filename)
 }

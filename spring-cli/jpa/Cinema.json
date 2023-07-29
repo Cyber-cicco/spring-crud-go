@@ -1,0 +1,21 @@
+{
+    "name": "Cinema",
+    "package": "com.example.springgo.infrastructure",
+    "fields": [
+        {
+            "name": "nom",
+            "type": "Double",
+            "options": []
+        },
+        {
+            "name": "salles",
+            "type": "List<Salles>",
+            "options": []
+        },
+        {
+            "name": "adresse",
+            "type": "Adresse",
+            "options": []
+        }
+    ]
+}

@@ -26,8 +26,9 @@ func InfereTypeByName(fieldName string) string {
 
     if strings.Contains(fieldName, "@"){
         fieldName = strings.ReplaceAll(fieldName, "List", "")
+        fieldName = strings.ReplaceAll(fieldName, "@", "")
         fieldName = ToClassName(fieldName)
-        return strings.Replace(returnedType, "{returned}", "String", 1);
+        return strings.Replace(returnedType, "{returned}", fieldName, 1);
     }
 
     if strings.HasPrefix(fieldName, "id"){

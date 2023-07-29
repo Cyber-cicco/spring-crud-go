@@ -1,0 +1,21 @@
+{
+    "name": "Adresse",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "rue",
+            "type": "String",
+            "options": []
+        },
+        {
+            "name": "ville",
+            "type": "String",
+            "options": []
+        },
+        {
+            "name": "codePostal",
+            "type": "String",
+            "options": []
+        }
+    ]
+}

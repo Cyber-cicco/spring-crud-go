@@ -1,6 +1,8 @@
 package services
 
 import (
+	"strings"
+
 	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
 	"fr.cybercicco/springgo/spring-cli/entities"
@@ -21,7 +23,7 @@ func CreateJpaEntity(jpaCname *string, jpaFields []string){
 func hydrateEntityFields(entity *entities.JpaEntity, jpaFields []string){
     for _, val := range jpaFields {
         jpaField := entities.JpaField{
-            Name : val,
+            Name : strings.ReplaceAll(val, "@", ""),
             Type : utils.InfereTypeByName(val),
             Options : []entities.FieldOption{},
         }

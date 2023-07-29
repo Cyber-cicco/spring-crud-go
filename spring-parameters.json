@@ -1,34 +1,40 @@
 {
     "base-package" : "com.example.springgo",
-    "erease-files" : false,
+    "erease-files" : true,
 
     "entity-package" : {
         "package" : "entites",
-        "package-policy" : "base"
+        "package-policy" : "base",
+        "suffix" : ""
     },
 
     "dto-package" : {
         "package" : "dto",
-        "package-policy" : "appended"
+        "package-policy" : "appended",
+        "suffix" : "Dto"
     },
 
     "mapper-package" : {
         "package" : "dto",
-        "package-policy" : "appended"
+        "package-policy" : "appended",
+        "suffix" : "Transformer"
     },
 
     "service-package" : {
         "package" : "service",
-        "package-policy" : "appended"
+        "package-policy" : "appended",
+        "suffix" : "Service"
     },
 
     "repository-package" : {
         "package" : "repository",
-        "package-policy" : "appended"
+        "package-policy" : "appended",
+        "suffix" : "Repository"
     },
 
     "controller-package" : {
         "package" : "controller",
-        "package-policy" : "appended"
+        "package-policy" : "appended",
+        "suffix" : "Controller"
     }
 }

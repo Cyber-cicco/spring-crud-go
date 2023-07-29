@@ -7,7 +7,7 @@ var JavaRepository = entities.BaseJavaClass{
 ``,
     Imports :
 `
-import {entity_package}.{class_name};
+import {%entity_package%}.{%class_name%};
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ import java.util.Optional;
     Implements :
 ``,
     Extends :
-` extends JpaRepository<{class_name}, Long>`,
+` extends JpaRepository<{%class_name%}, Long> `,
     Body :
 ``,
 }

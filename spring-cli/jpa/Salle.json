@@ -1,0 +1,26 @@
+{
+    "name": "Salle",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "numero",
+            "type": "String",
+            "options": []
+        },
+        {
+            "name": "cinema",
+            "type": "Cinema",
+            "options": []
+        },
+        {
+            "name": "sieges",
+            "type": "List<Sieges>",
+            "options": []
+        },
+        {
+            "name": "capacite",
+            "type": "String",
+            "options": []
+        }
+    ]
+}

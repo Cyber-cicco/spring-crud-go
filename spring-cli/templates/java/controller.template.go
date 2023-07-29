@@ -2,7 +2,7 @@ package java
 
 import "fr.cybercicco/springgo/spring-cli/entities"
 
-var javaController = entities.BaseJavaClass{
+var JavaController = entities.BaseJavaClass{
     Packages :
 `
 `,
@@ -11,9 +11,9 @@ var javaController = entities.BaseJavaClass{
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;    
-import {dto_package}.{class_name}{dto_suffix};
+import {%dto_package%}.{%class_name%}{%dto_suffix%};
 import org.springframework.http.ResponseEntity;
-import {service_package}.{class_name}{service_suffix};
+import {%service_package%}.{%class_name%}{%service_suffix%};
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 `
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("{class_name_lower}")
+@RequestMapping("{%class_name_lower%}")
 `,
     ClassType : 
 `class`,
@@ -37,26 +37,26 @@ import java.util.List;
     Body : 
 `
    
-    private final {class_name}{service_suffix} {class_name_lower}{service_suffix};
+    private final {%class_name%}{%service_suffix%} {%class_name_lower%}{%service_suffix%};
 
     @GetMapping
-    public ResponseEntity<List<{class_name}{dto_suffix}>> getAll{class_name}(){
-        return ResponseEntity.ok({class_name_lower}{service_suffix}.recuperer());
+    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> getAll{%class_name%}(){
+        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.recuperer());
     }
 
     @PostMapping
-    public ResponseEntity<List<{class_name}{dto_suffix}>> save{class_name}(@RequestBody {class_name}{dto_suffix} dto){
-        return ResponseEntity.ok({class_name_lower}{service_suffix}.creer(dto));
+    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> save{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
+        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.creer(dto));
     }
 
     @PutMapping
-    public ResponseEntity<List<{class_name}{dto_suffix}>> change{class_name}(@RequestBody {class_name}{dto_suffix} dto){
-        return ResponseEntity.ok({class_name_lower}{service_suffix}.changer(dto));
+    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> change{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
+        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.changer(dto));
     }
 
     @DeleteMapping
-    public ResponseEntity<List<{class_name}{dto_suffix}>> delete{class_name}(@RequestBody {class_name}{dto_suffix} dto){
-        return ResponseEntity.ok({class_name_lower}{service_suffix}.supprimer(dto));
+    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> delete{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
+        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.supprimer(dto));
     }
 
 `,

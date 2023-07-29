@@ -1,7 +1,5 @@
 package entities
 
-import "strings"
-
 type BaseJavaClass struct {
     Packages string
     Imports string
@@ -12,15 +10,8 @@ type BaseJavaClass struct {
     Implements string
     Extends string
     Body string
+    FileName string
+    Directory string
 }
 
-type EntityTemplate interface {
-    FormatParams(params map[string]string, field *string) 
-}
-
-func (j BaseJavaClass) FormatParams(params map[string]string, field *string) {
-    for key, value := range params {
-        *field = strings.ReplaceAll(*field, key, value)
-    }
-}
 
