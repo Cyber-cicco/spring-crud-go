@@ -5,8 +5,6 @@ type DtoOption struct {
 }
 
 type FieldOption struct {
-    Dto DtoOption `json:"dto"`
-    Relation string `json:"relation"`
     Annotations []string
 }
 

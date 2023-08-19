@@ -1,0 +1,20 @@
+{
+    "name": "Caca",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "pipi",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "prout",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        }
+    ]
+}

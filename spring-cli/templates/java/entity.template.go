@@ -7,9 +7,7 @@ var JavaEntity = entities.BaseJavaClass{
 ``,
     Imports :
 `
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;

@@ -1,0 +1,34 @@
+{
+    "base-package": "fr.cybercicco.springgo",
+    "erease-files": false,
+    "entity-package": {
+        "package": "entities",
+        "package-policy": "base",
+        "suffix": ""
+    },
+    "dto-package": {
+        "package": "dto",
+        "package-policy": "appended",
+        "suffix": "Dto"
+    },
+    "mapper-package": {
+        "package": "dto",
+        "package-policy": "appended",
+        "suffix": "Transformer"
+    },
+    "service-package": {
+        "package": "services",
+        "package-policy": "appended",
+        "suffix": "Service"
+    },
+    "repository-package": {
+        "package": "repository",
+        "package-policy": "appended",
+        "suffix": "Repository"
+    },
+    "controller-package": {
+        "package": "controller",
+        "package-policy": "appended",
+        "suffix": "Controller"
+    }
+}

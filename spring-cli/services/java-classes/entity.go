@@ -32,7 +32,7 @@ func createEntityBody(class entities.JpaEntity, entity *entities.BaseJavaClass) 
     var fields = []string{}
     for _, field := range class.Fields{
         updateImport(field, entity)
-        fields = append(fields, createClassField(field))
+        fields = append(fields,createClassField(field, field.Options.Annotations))
     }
     return strings.Join(fields, "")
 }

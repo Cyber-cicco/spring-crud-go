@@ -24,9 +24,9 @@ func updateImport(field entities.JpaField, entity *entities.BaseJavaClass){
     }
 }
 
-func createClassField(field entities.JpaField) string {
+func createClassField(field entities.JpaField, annotations []string) string {
     paramsMap := map[string]string {
-        "{%annotations%}":"",
+        "{%annotations%}":strings.Join(annotations, ""),
         "{%field_type%}":field.Type,
         "{%field_name%}":field.Name,
     }

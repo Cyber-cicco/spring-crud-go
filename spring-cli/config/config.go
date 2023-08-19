@@ -6,8 +6,8 @@ const RELATIVE_PATH string = "../../"
 const JAVA_PATH string = "src/main/java/"
 
 type Config struct{
-    BaseJavaDir string
-    JpaJsonFilePath string
+    BaseJavaDir string `json:"-"`
+    JpaJsonFilePath string `json:"-"`
     BasePackage string `json:"base-package"`
     EreaseFiles bool `json:"erease-files"`
     EntityPackage PackageOption`json:"entity-package"`

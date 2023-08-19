@@ -1,6 +1,7 @@
 package daos
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -59,4 +60,11 @@ func WriteJavaClass(directory, filename string, content []byte){
         utils.HandleBasicError(os.MkdirAll(directory, 0777), "Erreur dans la création d'un répertoire") 
     }
     writeFile(content, directory + filename)
+}
+
+func WriteBaseConfigFile(baseConfig config.Config) {
+    confBytes, err := json.MarshalIndent(baseConfig, "", "    ")
+    utils.HandleBasicError(err, "Erreur dans la désérialisation d'un objet en JSON")
+    fmt.Println("caca")
+    writeFile(confBytes, "test.json")
 }

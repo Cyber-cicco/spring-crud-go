@@ -16,7 +16,7 @@ func InfereTypeByName(fieldName string) string {
         return fields[1]
     }
     
-    if strings.Contains(fieldName, "List") || string(fieldName[len(fieldName)-1]) == "s"{
+    if strings.Contains(fieldName, "List") {
         returnedType = "List<{returned}>"
     }
 
@@ -24,9 +24,9 @@ func InfereTypeByName(fieldName string) string {
         returnedType = "Set<{returned}>"
     }
 
-    if strings.Contains(fieldName, "@"){
+    if strings.Contains(fieldName, "*"){
         fieldName = strings.ReplaceAll(fieldName, "List", "")
-        fieldName = strings.ReplaceAll(fieldName, "@", "")
+        fieldName = strings.ReplaceAll(fieldName, "*", "")
         fieldName = ToTitle(fieldName)
         return strings.Replace(returnedType, "{returned}", fieldName, 1);
     }
@@ -40,7 +40,7 @@ func InfereTypeByName(fieldName string) string {
     }
 
     if strings.Contains(fieldName, "Date") || strings.HasPrefix(fieldName, "date"){
-        return strings.Replace(returnedType, "{returned}", "Date", 1);
+        return strings.Replace(returnedType, "{returned}", "LocalDate", 1);
     }
 
     if strings.Contains(fieldName, "duree") || strings.Contains(fieldName, "longueur") || strings.Contains(fieldName, "length") || strings.Contains(fieldName, "quantit") || strings.HasPrefix(fieldName, "nb") {

@@ -1,0 +1,36 @@
+{
+    "name": "Thread",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "messageList",
+            "type": "List<Message>",
+            "options": {
+                "Annotations": [
+                    "@ManyToMany\n    @JoinTable(name=\"thread_message\",\n            joinColumns = @JoinColumn(name = \"thread_id\", referencedColumnName = \"id\"),\n            inverseJoinColumns = @JoinColumn(name = \"message_id\", referencedColumnName = \"id\")\n    )\n    "
+                ]
+            }
+        },
+        {
+            "name": "createur",
+            "type": "Utilisateur",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "dateCreation",
+            "type": "LocalDate",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "status",
+            "type": "Status",
+            "options": {
+                "Annotations": []
+            }
+        }
+    ]
+}
