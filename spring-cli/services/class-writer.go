@@ -34,8 +34,7 @@ func writeClassesForOneEntity(classes []entities.BaseJavaClass){
 
 
 func CreateJavaClasses(){
-    classes, err := daos.LoadEntityJson();
-    utils.HandleUsageError(err, "Il n'y a pas de fichier de configuration d'entités JPA dans le dossier jpa. Veuillez générer les fichier de configuration à l'aide de la commande jpa avant d'utiliser la commande spring")
+    classes := daos.LoadEntityJson();
     javaclasses.WriteClassImports(classes)
     for _, class := range classes{
         paramsMap := javaclasses.CreateParamsMapAndIrrigateTemplates(class)

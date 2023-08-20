@@ -21,7 +21,7 @@ func writeFile(bytes []byte, filename string){
 
 func createNewFile(bytes []byte, filename string){
     f,err := os.OpenFile(filename, os.O_CREATE | os.O_WRONLY, 0660);    
-    utils.HandleBasicError(err, "Erreur dans la création d'un fichier")
+    utils.HandleTechnicalError(err, config.ERR_FILE_CREATION)
     f.Write(bytes)
     f.Sync()
     f.Close()
@@ -57,13 +57,13 @@ func WriteEntityJson(entity entities.JpaEntity){
 
 func WriteJavaClass(directory, filename string, content []byte){
     if fileExists(directory) != nil {
-        utils.HandleBasicError(os.MkdirAll(directory, 0777), "Erreur dans la création d'un répertoire") 
+        utils.HandleTechnicalError(os.MkdirAll(directory, 0777), config.ERR_DIR_CREATION) 
     }
     writeFile(content, directory + filename)
 }
 
 func WriteBaseConfigFile(baseConfig config.Config) {
     confBytes, err := json.MarshalIndent(baseConfig, "", "    ")
-    utils.HandleBasicError(err, "Erreur dans la désérialisation d'un objet en JSON")
+    utils.HandleTechnicalError(err, config.ERR_MARSHARL)
     writeFile(confBytes, "../../spring-paramters.json")
 }

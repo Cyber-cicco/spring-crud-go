@@ -16,7 +16,7 @@ import (
 func main(){
 
     if len(os.Args) < 2 {
-        utils.HandleUsageError(errors.New("list index out of range"),config.MSG_NOT_ENOUGH_ARGS_MAIN)
+        utils.HandleUsageError(errors.New("list index out of range"),config.ERR_NOT_ENOUGH_ARGS_MAIN)
     }
     
     jpaCmd := flag.NewFlagSet(config.JPA_CONFIG_CREATION_ARG, flag.ExitOnError)
@@ -37,7 +37,7 @@ func main(){
             jpaCmd.Parse(os.Args[2:])
             jpaFields := strings.Split(*jpaFieldsString, " ")
             if *jpaCname == "" || *jpaFieldsString == "" {
-                utils.HandleUsageError(errors.New("args error"), "Erreur : vous devez préciser le nom de l'entité et de ses fields pour utiliser la commande jpa")
+                utils.HandleUsageError(errors.New("args error"), config.ERR_JPA_ARGS)
             }
             services.CreateJpaEntity(jpaCname, jpaFields)
         case "init":
@@ -50,7 +50,7 @@ func main(){
             cname := classCmd.String("c", "", "Nom de la classe que vous voulez créer")
             classCmd.Parse(os.Args[2:])
             if *cname == "" {
-                utils.HandleUsageError(errors.New("args error"), "Erreur: le nom de la classe est obligatoire")
+                utils.HandleUsageError(errors.New("args error"), config.ERR_CLASS_ARGS)
             }
             services.CreateJavaClass(*cname, *classType)
         case "project":
@@ -58,7 +58,7 @@ func main(){
             fmt.Println("subcommand 'project'")
             services.CreateJavaClasses()
         default:
-            utils.HandleUsageError(errors.New("bas usage"), "Mauvais usage de la commande")
+            utils.HandleUsageError(errors.New("bas usage"), config.ERR_BAD_ARGS)
             os.Exit(1)
         }
 }

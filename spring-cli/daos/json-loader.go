@@ -16,11 +16,11 @@ import (
 func LoadConfig() {
     file := filepath.Join(config.RELATIVE_PATH, "spring-parameters.json")
     data, fileErr := ioutil.ReadFile(file)
-    utils.HandleBasicError(fileErr, "Erreur dans l'ouverture du fichier de configuration")
-    utils.HandleBasicError(json.Unmarshal(data, &config.CONFIG), "Erreur dans la lecture du fichier de configuration")
+    utils.HandleTechnicalError(fileErr, config.ERR_OPEN_CONFIG)
+    utils.HandleTechnicalError(json.Unmarshal(data, &config.CONFIG), config.ERR_UNMARSHAL)
     config.CONFIG.BaseJavaDir = config.RELATIVE_PATH + config.JAVA_PATH 
     config.CONFIG.JpaJsonFilePath =  "../jpa/"
-    utils.HandleBasicError(fileExists(config.CONFIG.BaseJavaDir + strings.ReplaceAll(config.CONFIG.BasePackage, ".", "/") + "/"), "Erreur : le package précisé dans le fichier de configuration ne semble pas pointer vers un répertoire existant.")
+    utils.HandleTechnicalError(fileExists(config.CONFIG.BaseJavaDir + strings.ReplaceAll(config.CONFIG.BasePackage, ".", "/") + "/"), config.ERR_BAD_CONFIG_PACKAGE)
 }
 
 
@@ -29,25 +29,24 @@ func Jsonify(entity entities.JpaEntity) []byte{
     unformattedJson := string(entityJson)
     unformattedJson = strings.ReplaceAll(unformattedJson, "\\u003c", "<")
     unformattedJson = strings.ReplaceAll(unformattedJson, "\\u003e", ">")
-    utils.HandleBasicError(err, "Erreur interne : ")
+    utils.HandleTechnicalError(err, "Erreur interne : ")
     return []byte(unformattedJson)
 }
 
-func LoadEntityJson() ([]entities.JpaEntity, error){
+func LoadEntityJson() []entities.JpaEntity{
     directoryPath := config.CONFIG.JpaJsonFilePath 
     files, err := ioutil.ReadDir(directoryPath)
-    utils.HandleBasicError(err, "Erreur dans l'ouverture du dossier censé contenir les fichiers de configuration des entités JPA")
-    var noEntitiesErr error = nil
+    utils.HandleTechnicalError(err, config.ERR_JPA_DIR_OPEN)
     if len(files) == 0 {
-        noEntitiesErr = errors.New("files not found error")
+        utils.HandleUsageError(errors.New("files not found error"), config.ERR_NO_JPA_FILE)
     }
     jpaEntities := []entities.JpaEntity{}
     for _, file := range files {
         var jpaEntity entities.JpaEntity
         data, fileErr := ioutil.ReadFile(directoryPath + file.Name())
-        utils.HandleBasicError(fileErr, "Erreur dans la lecture de fichier de configuration d'une entité JPA")
-        utils.HandleBasicError(json.Unmarshal(data, &jpaEntity), "Erreur dans la lecture des ")
+        utils.HandleTechnicalError(fileErr, config.ERR_JPA_FILE_READ)
+        utils.HandleTechnicalError(json.Unmarshal(data, &jpaEntity), config.ERR_UNMARSHAL)
         jpaEntities = append(jpaEntities, jpaEntity)
     }
-    return jpaEntities[:], noEntitiesErr
+    return jpaEntities[:]
 }

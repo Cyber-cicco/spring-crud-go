@@ -51,7 +51,7 @@ func createAnnotations(annotation []string, fieldName string, cname string) []st
     switch strings.Split(annotation[1], ":")[0]{
         case "mtm":{
             return  checkManyToMany(paramsMap)
-        }
+       }
         case "mto" : {
             return []string{utils.FormatString(paramsMap, MANY_TO_ONE)}
         }

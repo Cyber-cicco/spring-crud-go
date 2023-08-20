@@ -48,17 +48,17 @@ import java.util.List;
     }
 
     @PostMapping
-    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> save{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
+    public ResponseEntity<{%class_name%}{%dto_suffix%}> save{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
         return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.creer(dto));
     }
 
     @PutMapping
-    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> change{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
+    public ResponseEntity<{%class_name%}{%dto_suffix%}> change{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
         return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.changer(dto));
     }
 
     @DeleteMapping
-    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> delete{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
+    public ResponseEntity<{%class_name%}{%dto_suffix%}> delete{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
         return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.supprimer(dto));
     }
 

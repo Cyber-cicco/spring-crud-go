@@ -3,6 +3,8 @@ package utils
 import (
 	"errors"
 	"strings"
+
+	"fr.cybercicco/springgo/spring-cli/config"
 )
 
 func InfereTypeByName(fieldName string) string {
@@ -11,7 +13,7 @@ func InfereTypeByName(fieldName string) string {
     if strings.Contains(fieldName, ":") {
         fields := strings.Split(fieldName, ":")
         if len(fields) == 1{
-            panic(errors.New("Le caractère ':' est utilisé pour préciser le type. Ce qui suit ce caractère ne doit pas être vide"))
+            panic(errors.New(config.ERR_TYPE_NOT_GIVEN))
         }
         return fields[1]
     }
