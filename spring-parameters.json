@@ -42,5 +42,11 @@
         "package" : "exception",
         "package-policy" : "base",
         "suffix" : "Exception"
+    },
+
+    "default-package" : {
+        "package" : "",
+        "package-policy" : "base",
+        "suffix" : ""
     }
 }

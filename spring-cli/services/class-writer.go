@@ -73,6 +73,7 @@ func CreateJavaClass(cname, classType string){
     case "ex":
         entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaException)
     case "":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaBaseClass)
     default :
     }
     fmt.Println(entity.Directory)
