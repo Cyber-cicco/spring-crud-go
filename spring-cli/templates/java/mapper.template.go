@@ -9,11 +9,12 @@ var JavaMapper = entities.BaseJavaClass{
 `,
     Imports :
 `
-import {%entity_package%}.{%class_name%}{%entity_suffix%};
-import {%dto_package%}.{%class_name%}{%dto_suffix%};    
 
 import org.springframework.stereotype.Component;
 `,
+    SpecialImports : `
+import {%entity_package%}.{%class_name%}{%entity_suffix%};
+import {%dto_package%}.{%class_name%}{%dto_suffix%};`,
     Annotations :
 `
 @Component

@@ -16,6 +16,7 @@ type Config struct{
     ServicePackage PackageOption`json:"service-package"`
     RepositoryPackage PackageOption`json:"repository-package"`
     ControllerPackage PackageOption`json:"controller-package"`
+    ExceptionPackage PackageOption`json:"exception-package"`
 }
 
 type PackageOption struct{

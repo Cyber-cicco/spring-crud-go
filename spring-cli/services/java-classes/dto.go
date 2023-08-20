@@ -10,22 +10,12 @@ import (
 )
 
 func CreateDto(class entities.JpaEntity, paramsMap map[string]string) entities.BaseJavaClass {
-    dto := entities.BaseJavaClass{
-        Packages : paramsMap["{%dto_package%}"],
-        Imports : utils.FormatString(paramsMap, java.JavaDto.Imports),
-        Annotations : utils.FormatString(paramsMap, java.JavaDto.Annotations),
-        ClassType : java.JavaDto.ClassType,
-        ClassName : class.Name,
-        ClassSuffix : paramsMap["{%dto_suffix%}"],
-        Implements : java.JavaDto.Implements,
-        Extends : utils.FormatString(paramsMap, java.JavaDto.Extends),
-    }
+    dto := CreateSimpleClass(class, paramsMap, java.JavaDto)
     bodyMap := map[string]string{
         "{%fields%}" : createDtoBody(class, &dto),
     }
+    dto.SpecialImports = utils.FormatString(paramsMap, java.JavaDto.SpecialImports)
     dto.Body = utils.FormatString(bodyMap, java.JavaDto.Body)
-    dto.Directory = findDirectoryPath(dto)
-    dto.FileName = dto.ClassName + dto.ClassSuffix + ".java"  
     return dto
 } 
 
@@ -43,3 +33,4 @@ func createDtoBody(object entities.JpaEntity, entity *entities.BaseJavaClass) st
     }
     return  strings.Join(fields, "")
 }
+

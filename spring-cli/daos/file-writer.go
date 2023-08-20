@@ -65,6 +65,5 @@ func WriteJavaClass(directory, filename string, content []byte){
 func WriteBaseConfigFile(baseConfig config.Config) {
     confBytes, err := json.MarshalIndent(baseConfig, "", "    ")
     utils.HandleBasicError(err, "Erreur dans la désérialisation d'un objet en JSON")
-    fmt.Println("caca")
-    writeFile(confBytes, "test.json")
+    writeFile(confBytes, "../../spring-paramters.json")
 }

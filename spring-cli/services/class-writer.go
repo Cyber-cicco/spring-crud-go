@@ -1,7 +1,9 @@
 package services
 
 import (
+	"fmt"
 
+	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
 	"fr.cybercicco/springgo/spring-cli/entities"
 	"fr.cybercicco/springgo/spring-cli/services/java-classes"
@@ -12,7 +14,7 @@ import (
 func createJavaFileBytes(javaClass entities.BaseJavaClass) []byte{
     paramsMap := map[string]string {
         "{%package%}" : javaClass.Packages,
-        "{%imports%}" : javaClass.Imports,
+        "{%imports%}" : javaClass.Imports + javaClass.SpecialImports,
         "{%annotations%}" : javaClass.Annotations,
         "{%class_type%}" : javaClass.ClassType,
         "{%class_name%}" : javaClass.ClassName,
@@ -33,10 +35,10 @@ func writeClassesForOneEntity(classes []entities.BaseJavaClass){
 
 func CreateJavaClasses(){
     classes, err := daos.LoadEntityJson();
-    utils.HandleBasicError(err, "Il n'y a pas de fichier de configuration d'entités JPA dans le dossier jpa. Veuillez générer les fichier de configuration à l'aide de la commande jpa avant d'utiliser la commande spring")
+    utils.HandleUsageError(err, "Il n'y a pas de fichier de configuration d'entités JPA dans le dossier jpa. Veuillez générer les fichier de configuration à l'aide de la commande jpa avant d'utiliser la commande spring")
     javaclasses.WriteClassImports(classes)
     for _, class := range classes{
-        paramsMap := javaclasses.CreateParamsMap(class)
+        paramsMap := javaclasses.CreateParamsMapAndIrrigateTemplates(class)
         classList := []entities.BaseJavaClass{
              javaclasses.CreateController(class, paramsMap),
              javaclasses.CreateService(class, paramsMap),
@@ -49,3 +51,31 @@ func CreateJavaClasses(){
     }
 }
 
+func CreateJavaClass(cname, classType string){
+    cname, pname := utils.GetClassNameAndPackageFromArgs(cname)
+    classInfos := entities.JpaEntity{
+        Name : cname,
+        Package: config.CONFIG.BasePackage + pname,
+    }
+    var entity entities.BaseJavaClass
+    switch classType{
+    case "ctrl":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaController)
+    case "srv":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaService)
+    case "ent":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaEntity)
+    case "map":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaMapper)
+    case "dto":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaDto)
+    case "repo":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaRepository)
+    case "ex":
+        entity = javaclasses.CreateSimpleClass(classInfos, javaclasses.CreateParamsMapAndIrrigateTemplates(classInfos), java.JavaException)
+    case "":
+    default :
+    }
+    fmt.Println(entity.Directory)
+    daos.WriteJavaClass(entity.Directory, entity.FileName, createJavaFileBytes(entity))
+}

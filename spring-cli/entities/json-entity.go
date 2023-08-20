@@ -18,7 +18,7 @@ type JpaEntity struct{
     Name string `json:"name"`
     Package string `json:"package"`
     Fields []JpaField `json:"fields"`
-    FileBytes []byte `json:"-"`
     FileName string `json:"-"`
+    FileBytes []byte `json:"-"`
 }
 

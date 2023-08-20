@@ -45,7 +45,9 @@ func HandleBasicError(err error, message string){
 }
 
 func HandleUsageError(err error, message string){
-    fmt.Println(message)
-    fmt.Println(USAGE_MESSAGE)
-    panic(err)
+    if(err != nil){
+        fmt.Println(message)
+        fmt.Println(USAGE_MESSAGE)
+        panic(err)
+    }
 }

@@ -1,0 +1,13 @@
+{
+    "name": "Foo",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "nbBar",
+            "type": "Integer",
+            "options": {
+                "Annotations": []
+            }
+        }
+    ]
+}

@@ -5,32 +5,33 @@ import "fr.cybercicco/springgo/spring-cli/entities"
 var JavaDto = entities.BaseJavaClass{
     Packages :
 ``,
-   Imports :
+    Imports :
 `
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 `,
-   Annotations :
+    Annotations :
 `
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder`,
-   ClassType :
+    ClassType :
 `class`,
-   ClassName :
+    ClassName :
 ``,
-   ClassSuffix :
+    ClassSuffix :
 ``,
-   Implements :
+    Implements :
 ``,
-   Extends :
+    Extends :
 ``,
-   Body :
+    Body :
 `
     private Long id;
 {%fields%}
 `,
+    SpecialImports :``,
 }

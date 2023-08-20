@@ -11,7 +11,7 @@ import (
 
 func CreateJpaEntity(jpaCname *string, jpaFields []string){
     jpaEntity := entities.JpaEntity {}
-    cname, pname := getClassNameAndPackageFromArgs(*jpaCname)
+    cname, pname := utils.GetClassNameAndPackageFromArgs(*jpaCname)
     jpaEntity.Name = cname
     jpaEntity.Package = config.CONFIG.BasePackage + pname
     jpaEntity.Fields = []entities.JpaField{}
@@ -93,12 +93,3 @@ func createMapKey(paramsMap map[string]string) uint64{
     return sumCname | sumTarget
 }
 
-func getClassNameAndPackageFromArgs(jpaCname string) (string, string){
-    classPackages := strings.Split(jpaCname, ".")
-    cname := classPackages[len(classPackages)-1]
-    pname := ""
-	for i := 0; i < len(classPackages) - 1; i++ {   
-        pname += "." + classPackages[i]
-    }
-    return cname, pname
-}

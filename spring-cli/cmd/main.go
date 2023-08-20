@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
 	"fr.cybercicco/springgo/spring-cli/services"
 	"fr.cybercicco/springgo/spring-cli/utils"
@@ -15,18 +16,19 @@ import (
 func main(){
 
     if len(os.Args) < 2 {
-        utils.HandleUsageError(errors.New("list index out of range"), "Erreur : le nombre d'arguments doit être supérieur à 2")
+        utils.HandleUsageError(errors.New("list index out of range"),config.MSG_NOT_ENOUGH_ARGS_MAIN)
     }
     
-    jpaCmd := flag.NewFlagSet("jpa", flag.ExitOnError)
-    ngCmd := flag.NewFlagSet("ng", flag.ExitOnError)
+    jpaCmd := flag.NewFlagSet(config.JPA_CONFIG_CREATION_ARG, flag.ExitOnError)
     projectCmd := flag.NewFlagSet("project", flag.ExitOnError)
-    cmpCmd := flag.NewFlagSet("components", flag.ExitOnError)
-    mapCmd := flag.NewFlagSet("mappers", flag.ExitOnError)
     initCmd := flag.NewFlagSet("init", flag.ExitOnError)
+    classCmd := flag.NewFlagSet("class", flag.ExitOnError)
 
     flag.Parse()
 
+    if os.Args[1] != "init" {
+        daos.LoadConfig()
+    }
 
     switch os.Args[1] {
         case "jpa":
@@ -37,29 +39,26 @@ func main(){
             if *jpaCname == "" || *jpaFieldsString == "" {
                 utils.HandleUsageError(errors.New("args error"), "Erreur : vous devez préciser le nom de l'entité et de ses fields pour utiliser la commande jpa")
             }
-            daos.LoadConfig()
             services.CreateJpaEntity(jpaCname, jpaFields)
-        case "ng":
-            ngCmd.Parse(os.Args[2:])
-            fmt.Println("subcommand 'ng'")
         case "init":
             pkg := initCmd.String("package", "", "Nom du package de base")
             initCmd.Parse(os.Args[2:])
             services.CreateBaseProject(pkg)
             fmt.Println(pkg)
+        case "class":
+            classType := classCmd.String("t", "", "Type de la classe que vous voulez créer")
+            cname := classCmd.String("c", "", "Nom de la classe que vous voulez créer")
+            classCmd.Parse(os.Args[2:])
+            if *cname == "" {
+                utils.HandleUsageError(errors.New("args error"), "Erreur: le nom de la classe est obligatoire")
+            }
+            services.CreateJavaClass(*cname, *classType)
         case "project":
             projectCmd.Parse(os.Args[2:])
-            daos.LoadConfig()
             fmt.Println("subcommand 'project'")
             services.CreateJavaClasses()
-        case "components":
-            cmpCmd.Parse(os.Args[2:])
-            fmt.Println("subcommand 'components'")
-        case "mappers":
-            mapCmd.Parse(os.Args[2:])
-            fmt.Println("subcommand 'mappers'")
         default:
-            fmt.Println("expected 'jpa', 'ng', 'spring', 'components' or 'mapper' subcommands")
+            utils.HandleUsageError(errors.New("bas usage"), "Mauvais usage de la commande")
             os.Exit(1)
         }
 }

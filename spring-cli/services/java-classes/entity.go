@@ -9,22 +9,12 @@ import (
 )
 
 func CreateEntity(class entities.JpaEntity, paramsMap map[string]string) entities.BaseJavaClass {
-    entity := entities.BaseJavaClass{
-        Packages : paramsMap["{%entity_package%}"],
-        Imports : utils.FormatString(paramsMap, java.JavaEntity.Imports),
-        Annotations : utils.FormatString(paramsMap, java.JavaEntity.Annotations),
-        ClassType : java.JavaEntity.ClassType,
-        ClassName : class.Name,
-        ClassSuffix : paramsMap["{%entity_suffix%}"],
-        Implements : java.JavaEntity.Implements,
-        Extends : utils.FormatString(paramsMap, java.JavaEntity.Extends),
-    }
+    entity := CreateSimpleClass(class, paramsMap, java.JavaEntity)
     bodyMap := map[string]string{
         "{%fields%}" : createEntityBody(class, &entity),
     }
     entity.Body = utils.FormatString(bodyMap, java.JavaEntity.Body)
-    entity.Directory = findDirectoryPath(entity)
-    entity.FileName = entity.ClassName + entity.ClassSuffix + ".java"  
+    entity.SpecialImports = utils.FormatString(paramsMap, java.JavaEntity.SpecialImports)
     return entity
 } 
 

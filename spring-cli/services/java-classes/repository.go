@@ -7,18 +7,9 @@ import (
 )
 
 func CreateRepository(class entities.JpaEntity, paramsMap map[string]string) entities.BaseJavaClass {
-    repository := entities.BaseJavaClass{
-        Packages : paramsMap["{%repository_package%}"],
-        Imports : utils.FormatString(paramsMap, java.JavaRepository.Imports),
-        Annotations : utils.FormatString(paramsMap, java.JavaRepository.Annotations),
-        ClassType : java.JavaRepository.ClassType,
-        ClassName : class.Name,
-        ClassSuffix : paramsMap["{%repository_suffix%}"],
-        Implements : java.JavaRepository.Implements,
-        Extends : utils.FormatString(paramsMap, java.JavaRepository.Extends),
-        Body : utils.FormatString(paramsMap, java.JavaRepository.Body),
-    }
-    repository.Directory = findDirectoryPath(repository)
-    repository.FileName = repository.ClassName + repository.ClassSuffix + ".java"  
+    repository := CreateSimpleClass(class, paramsMap, java.JavaRepository)
+    repository.SpecialImports = utils.FormatString(paramsMap, java.JavaRepository.SpecialImports)
+    repository.Body = utils.FormatString(paramsMap, java.JavaRepository.Body)
+    repository.Extends = utils.FormatString(paramsMap, java.JavaRepository.Extends)
     return repository
 } 

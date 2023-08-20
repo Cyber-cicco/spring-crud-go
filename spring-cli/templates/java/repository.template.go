@@ -7,11 +7,12 @@ var JavaRepository = entities.BaseJavaClass{
 ``,
     Imports :
 `
-import {%entity_package%}.{%class_name%};
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 `,
+    SpecialImports : `
+import {%entity_package%}.{%class_name%};`,
     Annotations :
 ``,
     ClassType :

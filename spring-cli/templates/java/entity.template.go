@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;    
 `,
+    SpecialImports : ``,
     Annotations :
 `
 @NoArgsConstructor

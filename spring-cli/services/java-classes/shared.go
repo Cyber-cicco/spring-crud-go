@@ -52,7 +52,7 @@ func createPackage(entity entities.JpaEntity,  option config.PackageOption) stri
     return config.CONFIG.BasePackage
 }
 
-func CreateParamsMap(entity entities.JpaEntity) map[string]string{
+func CreateParamsMapAndIrrigateTemplates(entity entities.JpaEntity) map[string]string{
     paramsMap := map[string]string {
         "{%dto_package%}" : createPackage(entity, config.CONFIG.DtoPackage),
         "{%mapper_package%}" : createPackage(entity, config.CONFIG.MapperPackage),
@@ -60,15 +60,46 @@ func CreateParamsMap(entity entities.JpaEntity) map[string]string{
         "{%entity_package%}" : createPackage(entity, config.CONFIG.EntityPackage),
         "{%service_package%}" : createPackage(entity, config.CONFIG.ServicePackage),
         "{%controller_package%}" : createPackage(entity, config.CONFIG.ControllerPackage),
+        "{%exception_package%}" : createPackage(entity, config.CONFIG.ExceptionPackage),
         "{%dto_suffix%}" : config.CONFIG.DtoPackage.Suffix,
         "{%mapper_suffix%}" :  config.CONFIG.MapperPackage.Suffix,
         "{%repository_suffix%}" :  config.CONFIG.RepositoryPackage.Suffix,
         "{%entity_suffix%}" :  config.CONFIG.EntityPackage.Suffix,
         "{%service_suffix%}" : config.CONFIG.ServicePackage.Suffix,
         "{%controller_suffix%}" :  config.CONFIG.ControllerPackage.Suffix,
+        "{%exception_suffix%}" : config.CONFIG.ExceptionPackage.Suffix,
         "{%class_name%}" : utils.ToTitle(entity.Name),
         "{%class_name_lower%}" : utils.ToAttributeName(entity.Name),
-
     }
+    java.JavaController.Packages = paramsMap["{%controller_package%}"]
+    java.JavaDto.Packages = paramsMap["{%dto_package%}"]
+    java.JavaMapper.Packages = paramsMap["{%mapper_package%}"]
+    java.JavaRepository.Packages = paramsMap["{%repository_package%}"]
+    java.JavaService.Packages = paramsMap["{%service_package%}"]
+    java.JavaEntity.Packages = paramsMap["{%entity_package%}"]
+    java.JavaException.Packages = paramsMap["{%exception_package%}"]
+    java.JavaController.ClassSuffix = paramsMap["{%controller_suffix%}"]
+    java.JavaDto.ClassSuffix = paramsMap["{%dto_suffix%}"]
+    java.JavaMapper.ClassSuffix = paramsMap["{%mapper_suffix%}"]
+    java.JavaRepository.ClassSuffix= paramsMap["{%repository_suffix%}"]
+    java.JavaService.ClassSuffix = paramsMap["{%service_suffix%}"]
+    java.JavaEntity.ClassSuffix = paramsMap["{%entity_suffix%}"]
+    java.JavaException.ClassSuffix = paramsMap["{%exception_suffix%}"]
     return paramsMap
+}
+
+func CreateSimpleClass(class entities.JpaEntity, paramsMap map[string]string, noParamClass entities.BaseJavaClass) entities.BaseJavaClass {
+    paramClass := entities.BaseJavaClass{
+        Packages : noParamClass.Packages,
+        Imports : utils.FormatString(paramsMap, noParamClass.Imports),
+        Annotations : utils.FormatString(paramsMap, noParamClass.Annotations),
+        ClassType : noParamClass.ClassType,
+        ClassName : class.Name,
+        ClassSuffix : noParamClass.ClassSuffix,
+        Implements : noParamClass.Implements,
+        Extends : noParamClass.Extends,
+    }
+    paramClass.Directory = findDirectoryPath(paramClass)
+    paramClass.FileName = paramClass.ClassName + paramClass.ClassSuffix + ".java"  
+    return paramClass
 }

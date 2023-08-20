@@ -9,19 +9,9 @@ import (
 )
 
 func CreateMapper(class entities.JpaEntity, paramsMap map[string]string) entities.BaseJavaClass {
-    mapper := entities.BaseJavaClass{
-        Packages : paramsMap["{%mapper_package%}"],
-        Imports : utils.FormatString(paramsMap, java.JavaMapper.Imports),
-        Annotations : utils.FormatString(paramsMap, java.JavaMapper.Annotations),
-        ClassType : java.JavaMapper.ClassType,
-        ClassName : class.Name,
-        ClassSuffix : paramsMap["{%mapper_suffix%}"],
-        Implements : java.JavaMapper.Implements,
-        Extends : utils.FormatString(paramsMap, java.JavaMapper.Extends),
-    }
+    mapper := CreateSimpleClass(class, paramsMap, java.JavaMapper)
+    mapper.SpecialImports = utils.FormatString(paramsMap, java.JavaMapper.SpecialImports)
     mapper.Body = createMapperBody(class, utils.CopyMap[string, string](paramsMap))    
-    mapper.Directory = findDirectoryPath(mapper)
-    mapper.FileName = mapper.ClassName + mapper.ClassSuffix + ".java"  
     return mapper
 } 
 

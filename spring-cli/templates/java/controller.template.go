@@ -11,6 +11,9 @@ var JavaController = entities.BaseJavaClass{
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;    
+`,
+SpecialImports : 
+`
 import {%dto_package%}.{%class_name%}{%dto_suffix%};
 import org.springframework.http.ResponseEntity;
 import {%service_package%}.{%class_name%}{%service_suffix%};

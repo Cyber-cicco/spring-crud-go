@@ -3,6 +3,7 @@ package entities
 type BaseJavaClass struct {
     Packages string
     Imports string
+    SpecialImports string
     Annotations string
     ClassType string
     ClassName string

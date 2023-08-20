@@ -36,5 +36,11 @@
         "package" : "controller",
         "package-policy" : "appended",
         "suffix" : "Controller"
+    },
+
+    "exception-package" : {
+        "package" : "exception",
+        "package-policy" : "base",
+        "suffix" : "Exception"
     }
 }
