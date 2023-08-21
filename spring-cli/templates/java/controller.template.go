@@ -25,8 +25,7 @@ import java.util.List;
 `
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("{%class_name_lower%}")
-`,
+@RequestMapping("/{%class_name_lower%}")`,
     ClassType : 
 `class`,
     ClassName : 

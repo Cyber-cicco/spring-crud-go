@@ -53,9 +53,5 @@ func InfereTypeByName(fieldName string) string {
         return strings.Replace(returnedType, "{returned}", "Double", 1);
     }
 
-    if strings.Contains(strings.ToLower(fieldName), "nom") || strings.Contains(strings.ToLower(fieldName), "name") {
-        return strings.Replace(returnedType, "{returned}", "Double", 1);
-    }
-
     return strings.Replace(returnedType, "{returned}", "String", 1);
 }

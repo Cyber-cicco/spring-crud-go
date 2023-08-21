@@ -21,6 +21,10 @@ func CreateJpaEntity(jpaCname *string, jpaFields []string){
     daos.WriteEntityJson(jpaEntity)
 }
 
+func DeleteJpaFiles(){
+    daos.DeleteJpaFiles()
+}
+
 func hydrateEntityFields(entity *entities.JpaEntity, jpaFields []string, cname string){
     for _, val := range jpaFields {
         rawName := strings.Split(val, ":")

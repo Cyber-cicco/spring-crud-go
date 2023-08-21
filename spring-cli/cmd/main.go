@@ -32,16 +32,21 @@ func main(){
 
     switch os.Args[1] {
         case "jpa":
-            jpaCname := jpaCmd.String("cname", "", "Name of the jpa class")
+            jpaCname := jpaCmd.String("c", "", "Name of the jpa class")
             jpaFieldsString := jpaCmd.String("f", "", "Fields of the class")
+            jpaClear := jpaCmd.Bool("clear", false, "Allows you to clear all jpa config files")
             jpaCmd.Parse(os.Args[2:])
             jpaFields := strings.Split(*jpaFieldsString, " ")
-            if *jpaCname == "" || *jpaFieldsString == "" {
+            if ((*jpaCname == "" || *jpaFieldsString == "") && !*jpaClear) || (*jpaClear && (*jpaCname != "" || *jpaFieldsString != "")) {
                 utils.HandleUsageError(errors.New("args error"), config.ERR_JPA_ARGS)
             }
-            services.CreateJpaEntity(jpaCname, jpaFields)
+            if *jpaClear {
+                services.DeleteJpaFiles()
+            } else {
+                services.CreateJpaEntity(jpaCname, jpaFields)
+            }
         case "init":
-            pkg := initCmd.String("package", "", "Nom du package de base")
+            pkg := initCmd.String("p", "", "Nom du package de base")
             initCmd.Parse(os.Args[2:])
             services.CreateBaseProject(pkg)
             fmt.Println(pkg)
@@ -58,7 +63,7 @@ func main(){
             fmt.Println("subcommand 'project'")
             services.CreateJavaClasses()
         default:
-            utils.HandleUsageError(errors.New("bas usage"), config.ERR_BAD_ARGS)
+            utils.HandleUsageError(errors.New("bad usage"), config.ERR_BAD_ARGS)
             os.Exit(1)
         }
 }

@@ -17,8 +17,7 @@ import {%entity_package%}.{%class_name%}{%entity_suffix%};
 import {%dto_package%}.{%class_name%}{%dto_suffix%};`,
     Annotations :
 `
-@Component
-`,
+@Component`,
     ClassType :
 `class`,
     ClassName :
