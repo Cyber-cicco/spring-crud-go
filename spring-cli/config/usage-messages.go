@@ -12,7 +12,7 @@ spring-go - utilisation
 /!\ Attention : le projet est en pre-alpha et certaines fonctionalités pourraient ne pas être implémentés ou avoir changé.
 
 commandes:
-    jpa [...args] : permet de créer le fichier de configuration d'une entité dans le dossier spring-cli/jpa. Prend pour arguments la classe et le nom des champs de l'entité
+    jpa | j [...args] : permet de créer le fichier de configuration d'une entité dans le dossier spring-cli/jpa. Prend pour arguments la classe et le nom des champs de l'entité
 
         -c : le nom de la classe. Il est possible de le préfixer par un nom de package en séparant le package et la classe par un point.
         Exemple : monpackage.MaClasse
@@ -34,13 +34,13 @@ commandes:
         -clear : permet de supprimer tous les fichiers du répertoire jpa
 
 
-    project : permet de créer le projet spring en fonction des spécifications précisées dans spring-parameters.json et des fichiers de configuration des entités JPA dans le dossier jpa. Va donc créer un repository, un service, un controller, un mapper et un DTO pour chaque entité. Pour cela, va utiliser un template présent dans le package java-classes pour chaque entité, et va s'en servir pour créer chaque classe selon des règles particulières. Les templates sont customisables, ce qui permet de les adapter à sa façon de faire.
+    project | p : permet de créer le projet spring en fonction des spécifications précisées dans spring-parameters.json et des fichiers de configuration des entités JPA dans le dossier jpa. Va donc créer un repository, un service, un controller, un mapper et un DTO pour chaque entité. Pour cela, va utiliser un template présent dans le package java-classes pour chaque entité, et va s'en servir pour créer chaque classe selon des règles particulières. Les templates sont customisables, ce qui permet de les adapter à sa façon de faire.
     
-    init : permet de créer le fichier de configuration du projet s'il n'existe pas déjà. Devrait également être capable de créer la structure du projet spring avec cela, grâce à des templates. Par défaut, ces templates sont paramétrés pour aller avec un projet maven et spring boot avec des dépendances spécifiques, mais il est possible de changer les templates. D'autres options devraient également pouvoir exister pour update les templates en fonction des changements que l'on a fait sur ces fichiers.
+    init | i : permet de créer le fichier de configuration du projet s'il n'existe pas déjà. Devrait également être capable de créer la structure du projet spring avec cela, grâce à des templates. Par défaut, ces templates sont paramétrés pour aller avec un projet maven et spring boot avec des dépendances spécifiques, mais il est possible de changer les templates. D'autres options devraient également pouvoir exister pour update les templates en fonction des changements que l'on a fait sur ces fichiers.
         
         - p : précise le package de base du projet
 
-    class : permet de créer une classe de base, un peu à la façon de l'utilitaire permettant de créer le boilerplate des classes de base dans IntelliJ. Prend une option pour le nom de la classe, et prend une option pour le type de la classe
+    class | c : permet de créer une classe de base, un peu à la façon de l'utilitaire permettant de créer le boilerplate des classes de base dans IntelliJ. Prend une option pour le nom de la classe, et prend une option pour le type de la classe
 
         -c : le nom de la classe. Il est possible de le préfixer par un nom de package en séparant le package et la classe par un point.
         Exemple : monpackage.MaClasse
