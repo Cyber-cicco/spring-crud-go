@@ -66,7 +66,7 @@ func WriteJavaClass(directory, filename string, content []byte) {
 func WriteBaseConfigFile(baseConfig config.Config) {
 	confBytes, err := json.MarshalIndent(baseConfig, "", "    ")
 	utils.HandleTechnicalError(err, config.ERR_MARSHARL)
-	writeFile(confBytes, "../../spring-paramters.json")
+	overrideFile(confBytes, "../../spring-parameters.json")
 }
 
 /*

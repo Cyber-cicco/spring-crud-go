@@ -14,4 +14,4 @@ var ERR_BAD_CONFIG_PACKAGE = "Erreur : le package précisé dans le fichier de c
 var ERR_JPA_DIR_OPEN = "Erreur dans l'ouverture du dossier censé contenir les fichiers de configuration des entités JPA"
 var ERR_JPA_FILE_READ = "Erreur dans la lecture de fichier de configuration d'une entité JPA"
 var ERR_NO_JPA_FILE = "Il n'y a pas de fichier de configuration d'entités JPA dans le dossier jpa. Veuillez générer les fichier de configuration à l'aide de la commande jpa avant d'utiliser la commande spring"
-
+var ERR_CONFIG_BAD_USAGE = "Erreur dans l'utilisation de la commande 'config'"

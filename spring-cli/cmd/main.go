@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"flag"
-	"fmt"
 	"os"
 	"strings"
 
@@ -21,6 +20,7 @@ func main(){
     
     jpaCmd := flag.NewFlagSet(config.JPA_CONFIG_CREATION_ARG, flag.ExitOnError)
     projectCmd := flag.NewFlagSet("project", flag.ExitOnError)
+    configCmd := flag.NewFlagSet("config", flag.ExitOnError)
     initCmd := flag.NewFlagSet("init", flag.ExitOnError)
     classCmd := flag.NewFlagSet("class", flag.ExitOnError)
 
@@ -47,6 +47,8 @@ func main(){
             projectExecute(projectCmd)
         case "project":
             projectExecute(projectCmd)
+        case "config":
+            configExecute(configCmd)
         default:
             utils.HandleUsageError(errors.New("bad usage"), config.ERR_BAD_ARGS)
             os.Exit(1)
@@ -87,6 +89,17 @@ func classExecute(classCmd *flag.FlagSet){
 
 func projectExecute(projectCmd *flag.FlagSet){
     projectCmd.Parse(os.Args[2:])
-    fmt.Println("subcommand 'project'")
     services.CreateJavaClasses()
+}
+
+func configExecute(configCmd *flag.FlagSet){
+    setSuffix := configCmd.String("suff", "", "Changer le suffixe d'un type de classe donné")
+    setPackage := configCmd.String("pkg", "", "Changer le package de base d'un type de classe donné")
+    setPackagePolicy := configCmd.String("pkgpol", "", "Changer la politique de package de base d'un type de classe donné")
+    classType := configCmd.String("t", "", "Type de la classe que vous voulez configurer")
+    configCmd.Parse(os.Args[2:])
+    if (*setSuffix == "" && *setPackage == "" && *setPackagePolicy == "") || *classType == "" {
+        utils.HandleUsageError(errors.New("usage error"), config.ERR_CONFIG_BAD_USAGE)
+    }
+    services.ChangeConfig(setSuffix, setPackage, setPackagePolicy, classType)
 }

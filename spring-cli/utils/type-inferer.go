@@ -28,6 +28,7 @@ func InfereTypeByName(fieldName string) string {
 
     if strings.Contains(fieldName, "*"){
         fieldName = strings.ReplaceAll(fieldName, "List", "")
+        fieldName = strings.ReplaceAll(fieldName, "Set", "")
         fieldName = strings.ReplaceAll(fieldName, "*", "")
         fieldName = ToTitle(fieldName)
         return strings.Replace(returnedType, "{returned}", fieldName, 1);

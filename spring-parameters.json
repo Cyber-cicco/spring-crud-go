@@ -1,52 +1,44 @@
 {
-    "base-package" : "com.example.springgo",
-    "erease-files" : true,
-
-    "entity-package" : {
-        "package" : "entites",
-        "package-policy" : "base",
-        "suffix" : ""
+    "base-package": "com.example.springgo",
+    "erease-files": true,
+    "entity-package": {
+        "package": "entites",
+        "package-policy": "base",
+        "suffix": ""
     },
-
-    "dto-package" : {
-        "package" : "dto",
-        "package-policy" : "appended",
-        "suffix" : "Dto"
+    "dto-package": {
+        "package": "dto",
+        "package-policy": "appended",
+        "suffix": "Dto"
     },
-
-    "mapper-package" : {
-        "package" : "dto",
-        "package-policy" : "appended",
-        "suffix" : "Transformer"
+    "mapper-package": {
+        "package": "dto",
+        "package-policy": "appended",
+        "suffix": "Transformer"
     },
-
-    "service-package" : {
-        "package" : "service",
-        "package-policy" : "appended",
-        "suffix" : "Service"
+    "service-package": {
+        "package": "service",
+        "package-policy": "appended",
+        "suffix": "Service"
     },
-
-    "repository-package" : {
-        "package" : "repository",
-        "package-policy" : "appended",
-        "suffix" : "Repository"
+    "repository-package": {
+        "package": "repository",
+        "package-policy": "appended",
+        "suffix": "Repository"
     },
-
-    "controller-package" : {
-        "package" : "controller",
-        "package-policy" : "appended",
-        "suffix" : "Controller"
+    "controller-package": {
+        "package": "controller",
+        "package-policy": "appended",
+        "suffix": "Controller"
     },
-
-    "exception-package" : {
-        "package" : "exception",
-        "package-policy" : "base",
-        "suffix" : "Exception"
+    "exception-package": {
+        "package": "exception",
+        "package-policy": "base",
+        "suffix": "Exception"
     },
-
-    "default-package" : {
-        "package" : "",
-        "package-policy" : "base",
-        "suffix" : ""
+    "default-package": {
+        "package": "",
+        "package-policy": "base",
+        "suffix": ""
     }
 }

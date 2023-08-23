@@ -92,6 +92,7 @@ func CreateParamsMapAndIrrigateTemplates(entity entities.JpaEntity) map[string]s
     java.JavaService.ClassSuffix = paramsMap["{%service_suffix%}"]
     java.JavaEntity.ClassSuffix = paramsMap["{%entity_suffix%}"]
     java.JavaException.ClassSuffix = paramsMap["{%exception_suffix%}"]
+    java.JavaBaseClass.ClassSuffix = paramsMap["{%base_suffix%}"]
     java.JavaEnum.ClassSuffix = paramsMap["{%base_suffix%}"]
     java.JavaInterface.ClassSuffix = paramsMap["{%base_suffix%}"]
     java.JavaRecord.ClassSuffix = paramsMap["{%base_suffix%}"]
