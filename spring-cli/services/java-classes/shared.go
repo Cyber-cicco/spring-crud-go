@@ -81,6 +81,10 @@ func CreateParamsMapAndIrrigateTemplates(entity entities.JpaEntity) map[string]s
     java.JavaEntity.Packages = paramsMap["{%entity_package%}"]
     java.JavaException.Packages = paramsMap["{%exception_package%}"]
     java.JavaBaseClass.Packages = paramsMap["{%base_package%}"]
+    java.JavaEnum.Packages = paramsMap["{%base_package%}"]
+    java.JavaInterface.Packages = paramsMap["{%base_package%}"]
+    java.JavaRecord.Packages = paramsMap["{%base_package%}"]
+    java.JavaAnnotation.Packages = paramsMap["{%base_package%}"]
     java.JavaController.ClassSuffix = paramsMap["{%controller_suffix%}"]
     java.JavaDto.ClassSuffix = paramsMap["{%dto_suffix%}"]
     java.JavaMapper.ClassSuffix = paramsMap["{%mapper_suffix%}"]
@@ -88,7 +92,10 @@ func CreateParamsMapAndIrrigateTemplates(entity entities.JpaEntity) map[string]s
     java.JavaService.ClassSuffix = paramsMap["{%service_suffix%}"]
     java.JavaEntity.ClassSuffix = paramsMap["{%entity_suffix%}"]
     java.JavaException.ClassSuffix = paramsMap["{%exception_suffix%}"]
-    java.JavaBaseClass.ClassSuffix = paramsMap["{%base_suffix%}"]
+    java.JavaEnum.ClassSuffix = paramsMap["{%base_suffix%}"]
+    java.JavaInterface.ClassSuffix = paramsMap["{%base_suffix%}"]
+    java.JavaRecord.ClassSuffix = paramsMap["{%base_suffix%}"]
+    java.JavaAnnotation.ClassSuffix = paramsMap["{%base_suffix%}"]
     return paramsMap
 }
 
