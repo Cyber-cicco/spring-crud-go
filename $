@@ -89,10 +89,11 @@ commandes:
         -pkg : permet de préciser un nouveau package pour le type de la classe souhaité
 
         -pkgpol : permet de préciser une nouvelle politique de package pour la classe souhaitée
+        
         Plusieurs options possibles pour pkgpol
 
             base : signifie que la classe de ce type sera toujours placé dans le package à la racine du projet
-            appended : signifie que la classe de ce type sera toujours dans le package de l'entité jpa lors de la création d'un projet
+            appended : signifie que la classe de ce type sera toujours dans le package précisé dans le fichier de l'entité jpa lors de la création d'un projet
 
 
 `
