@@ -13,10 +13,16 @@ func WriteAngularServiceFile(){
 
 func createTsService(fileContent string){
     tokens := LexFile(&fileContent)
-    for _, tokenLine := range tokens.tokens{
+    printLex(tokens)
+    OrganizeTokensByMeaning(tokens)
+}
+
+func printLex(tokens [][]SyntaxToken){
+    for _, tokenLine := range tokens{
         for _, token := range tokenLine{
-            fmt.Print(string(token.value) + " ")
+            fmt.Print(string(token.value) + "-")
         }
+        fmt.Print("end ")
         fmt.Println()
     }
 }

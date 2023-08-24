@@ -1,7 +1,7 @@
 package services
 
 import (
-	"unicode"
+    "unicode"
 )
 
 var WORD_KIND = "WORD_KIND"
@@ -19,15 +19,12 @@ var CLOSE_TYPE_KIND = "CLOSE_TYPE_KIND"
 var END_OF_LINE_TOKEN = "END_OF_LINE_TOKEN"
 var BAD_TOKEN = "BAD_TOKEN"
 var DOT_TOKEN = "DOT_TOKEN"
+var COMMMENT_KIND = "COMMMENT_KIND"
 
 type SyntaxToken struct {
     value []rune
     position int16
     kind string
-}
-
-type SyntaxFile struct {
-    tokens [][]SyntaxToken
 }
 
 var position int16
@@ -56,35 +53,45 @@ func lex(line []rune) SyntaxToken{
             token := SyntaxToken{ value : line[startPos:position] ,position : startPos, kind : WORD_KIND, }
             return token
         }
+        if line[position+1] == '*'{
+            for position+1 != int16(len(line)) && (line[position] != '*' || line[position+1] != '/'){
+                position++
+            }
+            return SyntaxToken{ value  : line[startPos:position], position : startPos, kind : COMMMENT_KIND, }
+        }
     }
 
     switch line[position] {
-        case ' ':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : SPACE_KIND, }
-        case '@':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : ANNOTATION_DELIMITER_KIND, }
-        case '"':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : STRING_DELIMITER_KIND, }
-        case '(':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_PARENTHESIS_KIND, }
-        case ')':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_PARENTHESIS_KIND, }
-        case '{':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_BRACKET_KIND, }
-        case '}':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_BRACKET_KIND, }
-        case '<':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_TYPE_KIND, }
-        case '>':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_TYPE_KIND, }
-        case ';':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : END_OF_LINE_KIND, }
-        case '.':
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : DOT_TOKEN, }
-        default:
-            return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : BAD_TOKEN, }
-        }
-        
+    case ' ':
+        position++
+        return lex(line)
+    case '\n':
+        position++
+        return lex(line)
+    case '@':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : ANNOTATION_DELIMITER_KIND, }
+    case '"':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : STRING_DELIMITER_KIND, }
+    case '(':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_PARENTHESIS_KIND, }
+    case ')':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_PARENTHESIS_KIND, }
+    case '{':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_BRACKET_KIND, }
+    case '}':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_BRACKET_KIND, }
+    case '<':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_TYPE_KIND, }
+    case '>':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_TYPE_KIND, }
+    case ';':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : END_OF_LINE_KIND, }
+    case '.':
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : DOT_TOKEN, }
+    default:
+        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : BAD_TOKEN, }
+    }
+
 
 }
 
@@ -97,10 +104,10 @@ func lexLine(newLine []rune) []SyntaxToken{
     return syntaxTokens
 }
 
-func LexFile(lines *string) SyntaxFile{
-    syntaxFile := SyntaxFile{}
+func LexFile(lines *string) [][]SyntaxToken{
+    tokens := [][]SyntaxToken{}
     for position < int16(len([]rune(*lines))-1){
-        syntaxFile.tokens = append(syntaxFile.tokens, lexLine([]rune(*lines)))
+        tokens = append(tokens, lexLine([]rune(*lines)))
     }
-    return syntaxFile
+    return tokens
 }

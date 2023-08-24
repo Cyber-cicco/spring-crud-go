@@ -17,3 +17,4 @@ var ERR_JPA_FILE_READ = "Erreur dans la lecture de fichier de configuration d'un
 var ERR_NO_JPA_FILE = "Il n'y a pas de fichier de configuration d'entités JPA dans le dossier jpa. Veuillez générer les fichier de configuration à l'aide de la commande jpa avant d'utiliser la commande spring"
 var ERR_CONFIG_BAD_USAGE = "Erreur dans l'utilisation de la commande 'config'"
 var ERR_SRC_FOLDER_NOT_IN_ROOT = "Le dossier src dans lequel se trouve tous les "
+var ERR_JAVA_PARSING_FAILED = "Erreur dans le parsing d'un fichier java"
