@@ -49,6 +49,10 @@ func main(){
             projectExecute(projectCmd)
         case "config":
             configExecute(configCmd)
+        case "service":
+            serviceExecute()
+        case "s":
+            serviceExecute()
         default:
             utils.HandleUsageError(errors.New("bad usage"), config.ERR_BAD_ARGS)
             os.Exit(1)
@@ -102,4 +106,8 @@ func configExecute(configCmd *flag.FlagSet){
         utils.HandleUsageError(errors.New("usage error"), config.ERR_CONFIG_BAD_USAGE)
     }
     services.ChangeConfig(setSuffix, setPackage, setPackagePolicy, classType)
+}
+
+func serviceExecute(){
+    services.WriteAngularServiceFile()
 }
