@@ -9,91 +9,6 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-type Interpreted interface {
-    constructor()
-}
-
-type JavaFile struct {
-    javaPackage PackageStatement
-    javaImports []ImportStatement
-    javaClass Class
-}
-
-type Method struct {
-    visibility Visibility
-    returnType JavaType
-    name       SyntaxToken
-    body       Block
-}
-
-type Block struct {
-    instructions    []Instruction
-    subBlocks       []Block
-    returnStatement Variable
-}
-
-type Annotation struct {
-    name Name
-    variables []Variable
-}
-
-type Keyword struct {
-    name SyntaxToken
-}
-
-type Class struct {
-    name        Name
-    attributes  []Attribute
-    methods     []Method
-    annotations []Annotation
-}
-
-type Instruction struct {
-    content []SyntaxToken
-    kind string
-}
-
-type Variable struct {
-    name     SyntaxToken
-    javaType JavaType
-    value    string
-}
-
-type Visibility struct {
-    visibility Keyword
-}
-
-type Attribute struct {
-    visibility Visibility
-    javaType   JavaType
-    name       Name
-}
-
-type JavaType struct {
-    name     JavaTypeName
-    subTypes []JavaType
-}
-
-type JavaTypeName struct {
-    name      Keyword
-    className SyntaxToken
-}
-
-type ImportStatement struct {
-    keyword Keyword
-    javaImport SyntaxToken
-    packagePath []SyntaxToken
-}
-
-type PackageStatement struct {
-    keyword Keyword
-    packagePath []SyntaxToken
-}
-
-type Name struct {
-    name SyntaxToken
-}
-
 var iPosition = 0
 var JAVAFILE JavaFile
 
@@ -106,15 +21,72 @@ func OrganizeTokensByMeaning(tokens [][]SyntaxToken) JavaFile {
 func createClass(tokens [][]SyntaxToken) Class {
     class := Class{}
     annotations := []Annotation{}
+    j := 0
     fmt.Println(tokens[iPosition][0])
-    if tokens[iPosition][0].kind == enums.ANNOTATION_DELIMITER_KIND {
-        annotations = createAnnotations(tokens[iPosition])
+    if tokens[iPosition][j].kind == enums.ANNOTATION_DELIMITER_KIND {
+        annotations, j = createAnnotations(tokens[iPosition])
+        class.annotations = annotations
+        j++
     }
-    class.annotations = annotations
+    if !slices.Contains(CLASS_IDENTIFIER_KEYWORDS, string(tokens[iPosition][j].value)) {
+        utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[iPosition][j].value), config.ERR_JAVA_PARSING_FAILED)
+    }
+    if tokens[iPosition][j].value == "public" {
+        class.visibility = Visibility{visibility : Keyword{name : tokens[iPosition][j]}}
+        j++
+    } else {
+        class.visibility = Visibility{visibility : Keyword{name : SyntaxToken{kind : enums.WORD_KIND, value : "protected"}}}
+    }
+    if !slices.Contains(CLASS_NAME_KEYWORDS, string(tokens[iPosition][j].value)) {
+        switch string(tokens[iPosition][j].value) {
+        case "final":
+            class.final = true
+            j++
+        case "abstract":
+            class.abstract = true
+            j++
+        default:
+            utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[iPosition][j].value), config.ERR_JAVA_PARSING_FAILED)
+        }
+    }
+    if slices.Contains(CLASS_NAME_KEYWORDS, string(tokens[iPosition][j].value)) {
+        class.classType = Keyword{name : tokens[iPosition][j]}
+        j++
+    } else {
+        utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[iPosition][j].value), config.ERR_JAVA_PARSING_FAILED)
+    }
+    if tokens[iPosition][j].kind != enums.WORD_KIND {
+        utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[iPosition][j].value), config.ERR_JAVA_PARSING_FAILED)
+    }
+    class.name = createName(tokens[iPosition][j])
+    j++
+    if tokens[iPosition][j].kind == enums.OPEN_BRACKET_KIND {
+        return class
+    }
+    if tokens[iPosition][j].value != "extends" {
+        j++
+        class.extends, j= createJavaType(tokens[iPosition], j)
+        j++
+    }
+    if tokens[iPosition][j].value != "implements" {
+        j++
+        for tokens[iPosition][j].kind != enums.OPEN_BRACKET_KIND {
+            singleImplement, j := createJavaType(tokens[iPosition], j)
+            class.implements = append(class.implements, singleImplement)
+            j++
+            if tokens[iPosition][j].kind != enums.COMMA_KIND {
+                utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[iPosition][j].value), config.ERR_JAVA_PARSING_FAILED)
+            }
+        }
+    }
     return class;
 }
 
-func createAnnotations(tokens []SyntaxToken) []Annotation {
+func createJavaType(tokens []SyntaxToken, j int) (JavaType, int) {
+    return JavaType {}, j
+}
+
+func createAnnotations(tokens []SyntaxToken) ([]Annotation, int) {
     if(len(tokens) < 2){
         utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[0].value), config.ERR_JAVA_PARSING_FAILED)
     }
@@ -130,7 +102,7 @@ func createAnnotations(tokens []SyntaxToken) []Annotation {
         }
         annotations = append(annotations, annotation)
     }
-    return annotations
+    return annotations, j
 }
 
 func createAnnotationVariable(tokens []SyntaxToken, j int) ([]Variable, int) {

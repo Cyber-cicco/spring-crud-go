@@ -22,11 +22,15 @@ func PrintImport(javaFile JavaFile){
 
 func PrintFile(javaFile JavaFile){
     PrintImport(javaFile)
-    PrintClassAnnotations(javaFile)
+    PrintClass(javaFile)
 }
 
 func PrintClassAnnotations(javaFile JavaFile){
     for _, javaClassAnnotation := range javaFile.javaClass.annotations{
         fmt.Printf("%+v\n", javaClassAnnotation)
     }
+}
+
+func PrintClass(javaFile JavaFile){
+    fmt.Printf("%+v\n", javaFile.javaClass)
 }
