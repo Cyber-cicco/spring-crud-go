@@ -1,4 +1,4 @@
-package services
+package javanalyser;
 
 var KEYWORDS = []string{
     "abstract",

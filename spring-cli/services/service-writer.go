@@ -1,10 +1,10 @@
 package services
 
 import (
-	"fmt"
 
 	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
+	"fr.cybercicco/springgo/spring-cli/javanalyser"
 )
 
 func WriteAngularServiceFile(){
@@ -12,16 +12,8 @@ func WriteAngularServiceFile(){
 }
 
 func createTsService(fileContent string){
-    tokens := LexFile(&fileContent)
-    OrganizeTokensByMeaning(tokens)
+    tokens := javanalyser.LexFile(&fileContent)
+    javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
+    javanalyser.PrintFile(javaFile)
 }
 
-func printLex(tokens [][]SyntaxToken){
-    for _, tokenLine := range tokens{
-        for _, token := range tokenLine{
-            fmt.Print(string(token.value) + "-")
-        }
-        fmt.Print("end ")
-        fmt.Println()
-    }
-}
