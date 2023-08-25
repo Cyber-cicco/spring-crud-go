@@ -6,6 +6,7 @@ import (
 
 var WORD_KIND = "WORD_KIND"
 var SPACE_KIND = "SPACE_KIND"
+var STAR_KIND = "STAR_KIND"
 var END_OF_LINE_KIND = "END_OF_FILE_KIND"
 var COMMMENT_DELIMITER_KIND = "COMMENT_DELIMITER_KIND"
 var STRING_DELIMITER_KIND = "STRING_DELIMITER_KIND"
@@ -18,11 +19,11 @@ var OPEN_TYPE_KIND = "OPEN_TYPE_KIND"
 var CLOSE_TYPE_KIND = "CLOSE_TYPE_KIND"
 var END_OF_LINE_TOKEN = "END_OF_LINE_TOKEN"
 var BAD_TOKEN = "BAD_TOKEN"
-var DOT_TOKEN = "DOT_TOKEN"
+var DOT_KIND = "DOT_TOKEN"
 var COMMMENT_KIND = "COMMMENT_KIND"
 
 type SyntaxToken struct {
-    value []rune
+    value string
     position int16
     kind string
 }
@@ -30,10 +31,10 @@ type SyntaxToken struct {
 var position int16
 var line []rune
 
-func next() rune{
+func next() string{
     lastPosition := position
     position++
-    return line[lastPosition]
+    return string(line[lastPosition])
 
 }
 
@@ -44,20 +45,20 @@ func lex(line []rune) SyntaxToken{
         for unicode.IsLetter(line[position]) || unicode.IsDigit(line[position]){
             position++
         }
-        token := SyntaxToken{ value : line[startPos:position] ,position : startPos, kind : WORD_KIND, }
+        token := SyntaxToken{ value : string(line[startPos:position]) ,position : startPos, kind : WORD_KIND, }
         return token
     }
 
     if line[position] == '/'{
         if line[position+1] == '/'{
-            token := SyntaxToken{ value : line[startPos:position] ,position : startPos, kind : WORD_KIND, }
+            token := SyntaxToken{ value : string(line[startPos:position]) ,position : startPos, kind : WORD_KIND, }
             return token
         }
         if line[position+1] == '*'{
             for position+1 != int16(len(line)) && (line[position] != '*' || line[position+1] != '/'){
                 position++
             }
-            return SyntaxToken{ value  : line[startPos:position], position : startPos, kind : COMMMENT_KIND, }
+            return SyntaxToken{ value  : string(line[startPos:position]), position : startPos, kind : COMMMENT_KIND, }
         }
     }
 
@@ -69,27 +70,29 @@ func lex(line []rune) SyntaxToken{
         position++
         return lex(line)
     case '@':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : ANNOTATION_DELIMITER_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : ANNOTATION_DELIMITER_KIND, }
     case '"':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : STRING_DELIMITER_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : STRING_DELIMITER_KIND, }
     case '(':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_PARENTHESIS_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : OPEN_PARENTHESIS_KIND, }
     case ')':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_PARENTHESIS_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : CLOSE_PARENTHESIS_KIND, }
     case '{':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_BRACKET_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : OPEN_BRACKET_KIND, }
     case '}':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_BRACKET_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : CLOSE_BRACKET_KIND, }
     case '<':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : OPEN_TYPE_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : OPEN_TYPE_KIND, }
     case '>':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : CLOSE_TYPE_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : CLOSE_TYPE_KIND, }
     case ';':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : END_OF_LINE_KIND, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : END_OF_LINE_KIND, }
+    case '*':
+        return SyntaxToken{ value  : next(), position : startPos, kind : STAR_KIND, }
     case '.':
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : DOT_TOKEN, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : DOT_KIND, }
     default:
-        return SyntaxToken{ value  : []rune{next()}, position : startPos, kind : BAD_TOKEN, }
+        return SyntaxToken{ value  : next(), position : startPos, kind : BAD_TOKEN, }
     }
 
 

@@ -79,7 +79,7 @@ type JavaTypeName struct {
 
 type ImportStatement struct {
     keyword Keyword
-    javaType JavaType
+    javaImport SyntaxToken
     packagePath []SyntaxToken
 }
 
@@ -96,7 +96,9 @@ var i = 0
 
 func OrganizeTokensByMeaning(tokens [][]SyntaxToken) JavaFile {
     javaFile := intializedJavaFile(tokens)
-    fmt.Println(javaFile)
+    for _, javaImport := range javaFile.javaImports {
+        fmt.Println(javaImport.javaImport.value)
+    }
 	return javaFile
 }
 
@@ -105,25 +107,51 @@ func intializedJavaFile(tokens [][]SyntaxToken) JavaFile {
     for !slices.Contains(CLASS_IDENTIFIER_KEYWORDS, string(tokens[i][0].value)) && tokens[i][0].kind != ANNOTATION_DELIMITER_KIND {
         switch string(tokens[i][0].value) {
             case "package":
-                javaPackage, err := createPackageStatement(tokens[i])
-                utils.HandleTechnicalError(err, config.ERR_JAVA_PARSING_FAILED)
+                javaPackage := createPackageStatement(tokens[i])
                 javaFile.javaPackage = javaPackage
+            case "import":
+                importStatement := createImportStatement(tokens[i])
+                javaFile.javaImports = append(javaFile.javaImports, importStatement)
         }
         i++
     }
     return javaFile
 }
 
-func createPackageStatement(tokens []SyntaxToken) (PackageStatement, error) {
+func createImportStatement(tokens []SyntaxToken) ImportStatement {
+    importStatement := ImportStatement{
+        keyword : Keyword{name : tokens[0]},
+    }
+    j := 0
+    for tokens[j].kind != END_OF_LINE_KIND {
+        if tokens[j].kind == WORD_KIND || tokens[j].kind == STAR_KIND {
+            if tokens[j+1].kind == DOT_KIND {
+                importStatement.packagePath = append(importStatement.packagePath, tokens[j])
+            } else {
+                importStatement.javaImport = tokens[j]
+            }
+        } else if tokens[j].kind != DOT_KIND {
+            utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[j].value), config.ERR_JAVA_PARSING_FAILED)
+        }
+        j++
+    }
+    return importStatement
+}
+
+func createPackageStatement(tokens []SyntaxToken) PackageStatement {
     packageStatement := PackageStatement{
         keyword : Keyword{name : tokens[0]},
     }
-    for j := 1; j < len(tokens); j++ {
+    j := 1
+    for tokens[j].kind != END_OF_LINE_KIND {
         if tokens[j].kind == WORD_KIND {
             packageStatement.packagePath = append(packageStatement.packagePath, tokens[j])
+        } else if tokens[j].kind != DOT_KIND {
+            utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[j].value), config.ERR_JAVA_PARSING_FAILED)
         }
+        j++
     }
-    return packageStatement, nil
+    return packageStatement
 }
 
 func isKeyword(token SyntaxToken) bool {

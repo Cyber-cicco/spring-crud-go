@@ -13,7 +13,6 @@ func WriteAngularServiceFile(){
 
 func createTsService(fileContent string){
     tokens := LexFile(&fileContent)
-    printLex(tokens)
     OrganizeTokensByMeaning(tokens)
 }
 
