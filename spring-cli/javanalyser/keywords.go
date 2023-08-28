@@ -77,6 +77,15 @@ var CLASS_IDENTIFIER_KEYWORDS = []string{
     "public",
 }
 
+var METHOD_IDENTIFIER_KEYWORDS = []string{
+    "public",
+    "private",
+    "protected",
+    "abstract",
+    "final",
+    "static",
+}
+
 var JAVA_TYPES = []string{
     "String",
     "Integer",
@@ -93,6 +102,18 @@ var JAVA_TYPES = []string{
     "Map",
     "Optional",
     "Object",
+    "void",
+    "int",
+    "long",
+    "double",
+    "float",
+    "boolean",
+    "char",
+    "byte",
+    "short",
+}
+
+var JAVA_BASE_TYPES = []string{
     "void",
     "int",
     "long",
