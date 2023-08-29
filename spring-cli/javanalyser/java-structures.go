@@ -1,16 +1,17 @@
 package javanalyser
 
-type JavaFile struct {
-	javaPackage PackageStatement
-	javaImports []ImportStatement
-	javaClass   Class
+type JavaInterpreted struct {
+	JavaPackage PackageStatement
+	JavaImports []ImportStatement
+	JavaClass   Class
 }
 
 type Method struct {
 	final      bool
 	static     bool
 	abstract   bool
-	visibility Visibility
+	visibility Keyword
+    annotations []Annotation
 	returnType JavaType
 	name       Name
 	parameters []Variable
@@ -40,7 +41,7 @@ type Class struct {
 	implements  []JavaType
 	classType   Keyword
 	attributes  []Attribute
-	visibility  Visibility
+	visibility  Keyword
 	methods     []Method
 	classes     []Class
 	annotations []Annotation
@@ -57,12 +58,9 @@ type Variable struct {
 	value    string
 }
 
-type Visibility struct {
-	visibility Keyword
-}
-
 type Attribute struct {
-	visibility Visibility
+    annotations []Annotation
+	visibility Keyword
 	final      bool
 	static     bool
 	javaType   JavaType
@@ -72,9 +70,8 @@ type Attribute struct {
 }
 
 type JavaType struct {
-	name      SyntaxToken
-	className SyntaxToken
-	subTypes  []JavaType
+	Name      SyntaxToken
+	SubTypes  []JavaType
 }
 
 type ImportStatement struct {
@@ -90,4 +87,9 @@ type PackageStatement struct {
 
 type Name struct {
 	name SyntaxToken
+}
+
+type AttributeI struct {
+    Name string
+    JavaType JavaType
 }

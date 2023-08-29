@@ -12,6 +12,13 @@ func ToTitle(s string) string {
     return string(runes)
 }
 
+func RemoveSuffix(s string, suffix string) string {
+    if strings.HasSuffix(s, suffix) {
+        return s[:len(s)-len(suffix)]
+    }
+    return s
+}
+
 func ToAttributeName(s string) string {
     runes := []rune(s)
     runes[0] = unicode.ToLower(runes[0])

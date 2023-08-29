@@ -8,7 +8,7 @@ import (
 
 
 type SyntaxToken struct {
-    value string
+    Value string
     position int16
     kind string
 }
@@ -30,7 +30,7 @@ func lex(line []rune) SyntaxToken{
         for unicode.IsLetter(line[position]) || unicode.IsDigit(line[position]){
             position++
         }
-        token := SyntaxToken{ value : string(line[startPos:position]) ,position : startPos, kind : enums.WORD_KIND, }
+        token := SyntaxToken{ Value : string(line[startPos:position]) ,position : startPos, kind : enums.WORD_KIND, }
         return token
     }
     if unicode.IsDigit(line[position]) {
@@ -38,20 +38,20 @@ func lex(line []rune) SyntaxToken{
         for unicode.IsDigit(line[position]) || line[position] == '.' {
             position++
         }
-        token := SyntaxToken{ value : string(line[startPos:position]) ,position : startPos, kind : enums.NUMBER_KIND, }
+        token := SyntaxToken{ Value : string(line[startPos:position]) ,position : startPos, kind : enums.NUMBER_KIND, }
         return token
     }
 
     if line[position] == '/'{
         if line[position+1] == '/'{
-            token := SyntaxToken{ value : string(line[startPos:position]) ,position : startPos, kind : enums.WORD_KIND, }
+            token := SyntaxToken{ Value : string(line[startPos:position]) ,position : startPos, kind : enums.WORD_KIND, }
             return token
         }
         if line[position+1] == '*'{
             for position+1 != int16(len(line)) && (line[position] != '*' || line[position+1] != '/'){
                 position++
             }
-            return SyntaxToken{ value  : string(line[startPos:position]), position : startPos, kind : enums.COMMMENT_KIND, }
+            return SyntaxToken{ Value  : string(line[startPos:position]), position : startPos, kind : enums.COMMMENT_KIND, }
         }
     }
 
@@ -63,33 +63,33 @@ func lex(line []rune) SyntaxToken{
         position++
         return lex(line)
     case '@':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.ANNOTATION_DELIMITER_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.ANNOTATION_DELIMITER_KIND, }
     case '"':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.STRING_DELIMITER_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.STRING_DELIMITER_KIND, }
     case '(':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.OPEN_PARENTHESIS_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.OPEN_PARENTHESIS_KIND, }
     case ')':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.CLOSE_PARENTHESIS_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.CLOSE_PARENTHESIS_KIND, }
     case '{':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.OPEN_BRACKET_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.OPEN_BRACKET_KIND, }
     case '}':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.CLOSE_BRACKET_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.CLOSE_BRACKET_KIND, }
     case '<':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.OPEN_TYPE_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.OPEN_TYPE_KIND, }
     case '>':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.CLOSE_TYPE_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.CLOSE_TYPE_KIND, }
     case ';':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.END_OF_LINE_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.END_OF_LINE_KIND, }
     case '*':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.STAR_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.STAR_KIND, }
     case '.':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.DOT_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.DOT_KIND, }
     case ',':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.COMMA_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.COMMA_KIND, }
     case '=':
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.EQUAL_KIND, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.EQUAL_KIND, }
     default:
-        return SyntaxToken{ value  : next(), position : startPos, kind : enums.BAD_TOKEN, }
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.BAD_TOKEN, }
     }
 
 
