@@ -77,3 +77,20 @@ func GetClassNameAndPackageFromArgs(jpaCname string) (string, string) {
     }
     return cname, pname
 }
+
+func ToInterfaceFileName(interfaceName string) string {
+    newName := ""
+    positionOfLastUpper := 0
+    for i := 0; i < len(interfaceName); i++ {
+        if unicode.IsUpper(rune(interfaceName[i])) {
+            if i != 0 {
+                newName += interfaceName[positionOfLastUpper:i] + "-"
+                positionOfLastUpper = i
+            }
+        }
+        if i == len(interfaceName)-1 {
+            newName += interfaceName[positionOfLastUpper:]
+        }
+    }
+    return strings.ToLower(newName) + ".ts"
+}

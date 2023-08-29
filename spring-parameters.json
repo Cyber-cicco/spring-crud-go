@@ -1,6 +1,8 @@
 {
     "base-package": "com.example.springgo",
     "erease-files": true,
+    "ts-interface-folder": "/home/hijokaidan/PC/spring-go/models/",
+    "ts-service-folder" :  "/home/hijokaidan/PC/spring-go/providers/",
     "entity-package": {
         "package": "entites",
         "package-policy": "base",

@@ -28,7 +28,7 @@ func createJavaFileBytes(javaClass entities.BaseJavaClass) []byte{
 
 func writeClassesForOneEntity(classes []entities.BaseJavaClass){
     for _, class := range classes{
-        daos.WriteJavaClass(class.Directory, class.FileName, createJavaFileBytes(class))        
+        daos.WriteSimpleFile(class.Directory, class.FileName, createJavaFileBytes(class))        
     }
 }
 
@@ -86,5 +86,5 @@ func CreateJavaClass(cname, classType string){
     default :
     }
     fmt.Println(entity.Directory)
-    daos.WriteJavaClass(entity.Directory, entity.FileName, createJavaFileBytes(entity))
+    daos.WriteSimpleFile(entity.Directory, entity.FileName, createJavaFileBytes(entity))
 }

@@ -18,6 +18,8 @@ type Config struct{
     ControllerPackage PackageOption`json:"controller-package"`
     ExceptionPackage PackageOption`json:"exception-package"`
     DefaultPackage PackageOption`json:"default-package"`
+    TsInterfaceFolder string`json:"ts-interface-folder"`
+    TsServiceFolder string`json:"ts-service-folder"`
 }
 
 type PackageOption struct{

@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 
 	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
@@ -37,8 +36,7 @@ func createTsInterface(fileContent string){
         attributesString += utils.FormatString(paramsMap, angular.INTERFACE_ATTRIBUTE_TEMPLATE)
     }
     paramsMap["{%attributes%}"] = attributesString
-    fmt.Println(utils.FormatString(paramsMap, angular.INTERFACE_TEMPLATE))
-
+    daos.WriteSimpleFile(config.CONFIG.TsInterfaceFolder, utils.ToInterfaceFileName(interfaceName),[]byte(utils.FormatString(paramsMap, angular.INTERFACE_TEMPLATE))) 
 }
 
 func WriteAngularInterfaceFile(){

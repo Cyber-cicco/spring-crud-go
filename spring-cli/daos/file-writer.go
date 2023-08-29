@@ -56,7 +56,7 @@ func WriteEntityJson(entity entities.JpaEntity) {
 	writeFile(entity.FileBytes, entity.FileName)
 }
 
-func WriteJavaClass(directory, filename string, content []byte) {
+func WriteSimpleFile(directory, filename string, content []byte) {
 	if fileExists(directory) != nil {
 		utils.HandleTechnicalError(os.MkdirAll(directory, 0777), config.ERR_DIR_CREATION)
 	}
