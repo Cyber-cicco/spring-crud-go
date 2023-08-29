@@ -1,0 +1,29 @@
+{
+    "name": "Tag",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "title",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "color",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "taskList",
+            "type": "List<Task>",
+            "options": {
+                "Annotations": [
+                    "@OneToMany(mappedBy = \"tag\")\n    "
+                ]
+            }
+        }
+    ]
+}

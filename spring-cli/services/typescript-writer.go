@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 
 	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
@@ -28,11 +29,13 @@ func createTsInterface(fileContent string){
     interfaceName := utils.RemoveSuffix(javanalyser.GetClassName(javaFile), config.CONFIG.DtoPackage.Suffix)
     paramsMap := map[string]string{
         "{%class_name%}": interfaceName,
+        "{%imports%}": "",
     }
     var attributesString = ""
+    fmt.Println("----", interfaceName, "----")
     for _, attribute := range attributes{
         paramsMap["{%attribute_name%}"] = utils.ToAttributeName(attribute.Name)
-        paramsMap["{%attribute_type%}"] = javanalyser.FindTsType(attribute.JavaType)
+        paramsMap["{%attribute_type%}"] = javanalyser.FindTsType(attribute.JavaType, paramsMap, interfaceName)
         attributesString += utils.FormatString(paramsMap, angular.INTERFACE_ATTRIBUTE_TEMPLATE)
     }
     paramsMap["{%attributes%}"] = attributesString

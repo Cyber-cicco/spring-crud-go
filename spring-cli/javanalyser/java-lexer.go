@@ -105,6 +105,7 @@ func lexLine(newLine []rune) []SyntaxToken{
 }
 
 func LexFile(lines *string) [][]SyntaxToken{
+    position = 0
     tokens := [][]SyntaxToken{}
     for position < int16(len([]rune(*lines))-1){
         tokens = append(tokens, lexLine([]rune(*lines)))

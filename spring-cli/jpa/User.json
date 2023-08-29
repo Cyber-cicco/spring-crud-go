@@ -1,0 +1,61 @@
+{
+    "name": "User",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "nom",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "prenom",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "email",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "password",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "userGroupList",
+            "type": "List<UserGroup>",
+            "options": {
+                "Annotations": [
+                    "@ManyToMany\n    @JoinTable(name=\"user_userGroup\",\n            joinColumns = @JoinColumn(name = \"user_id\", referencedColumnName = \"id\"),\n            inverseJoinColumns = @JoinColumn(name = \"userGroup_id\", referencedColumnName = \"id\")\n    )\n    "
+                ]
+            }
+        },
+        {
+            "name": "commentaryList",
+            "type": "List<Commentary>",
+            "options": {
+                "Annotations": [
+                    "@OneToMany(mappedBy = \"user\")\n    "
+                ]
+            }
+        },
+        {
+            "name": "taskList",
+            "type": "List<Task>",
+            "options": {
+                "Annotations": [
+                    "@OneToMany(mappedBy = \"user\")\n    "
+                ]
+            }
+        }
+    ]
+}

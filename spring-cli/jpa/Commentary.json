@@ -1,0 +1,38 @@
+{
+    "name": "Commentary",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "content",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "author",
+            "type": "User",
+            "options": {
+                "Annotations": [
+                    "@ManyToOne\n    @JoinColumn(name = \"commentary_id\")\n    "
+                ]
+            }
+        },
+        {
+            "name": "rating",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "responseList",
+            "type": "List<Commentary>",
+            "options": {
+                "Annotations": [
+                    "@OneToMany(mappedBy = \"commentary\")\n    "
+                ]
+            }
+        }
+    ]
+}
