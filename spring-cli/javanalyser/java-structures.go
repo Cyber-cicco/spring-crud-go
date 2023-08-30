@@ -7,89 +7,90 @@ type JavaInterpreted struct {
 }
 
 type Method struct {
-	final      bool
-	static     bool
-	abstract   bool
-	visibility Keyword
-    annotations []Annotation
-	returnType JavaType
-	name       Name
-	parameters []Variable
-	body       Bloc
+	Final       bool
+	Static      bool
+	Abstract    bool
+	Visibility  Keyword
+	Annotations []Annotation
+	ReturnType  JavaType
+	Name        Name
+	Parameters  []Variable
+	Body        Bloc
 }
 
 type Bloc struct {
-	instructions    []Instruction
-	subBlocks       []Bloc
-	returnStatement Variable
+	Instructions    []Instruction
+	SubBlocks       []Bloc
+	ReturnStatement Variable
 }
 
 type Annotation struct {
-	name      Name
-	variables []Variable
+	Name      Name
+	Variables []Variable
 }
 
 type Keyword struct {
-	name SyntaxToken
+	Name SyntaxToken
 }
 
 type Class struct {
-	name        Name
-	abstract    bool
-	final       bool
-	extends     JavaType
-	implements  []JavaType
-	classType   Keyword
-	attributes  []Attribute
-	visibility  Keyword
-	methods     []Method
-	classes     []Class
-	annotations []Annotation
+	Name        Name
+	Abstract    bool
+	Final       bool
+	Extends     JavaType
+	Implements  []JavaType
+	ClassType   Keyword
+	Attributes  []Attribute
+	Visibility  Keyword
+	Methods     []Method
+	Classes     []Class
+	Annotations []Annotation
 }
 
 type Instruction struct {
-	content []SyntaxToken
-	kind    string
+	Content []SyntaxToken
+	Kind    string
 }
 
 type Variable struct {
-	name     SyntaxToken
-	javaType JavaType
-	value    string
+    Annotations []Annotation
+	Name     SyntaxToken
+	JavaType JavaType
+	Value    string
 }
 
 type Attribute struct {
-    annotations []Annotation
-	visibility Keyword
-	final      bool
-	static     bool
-	javaType   JavaType
-	name       Name
-	value      string
-	null       bool
+	Annotations []Annotation
+	Visibility  Keyword
+	Final       bool
+	Static      bool
+	JavaType    JavaType
+	Name        Name
+	Value       string
+	Null        bool
 }
 
 type JavaType struct {
-	Name      SyntaxToken
-	SubTypes  []JavaType
+	Name     SyntaxToken
+	SubTypes []JavaType
 }
 
 type ImportStatement struct {
-	keyword     Keyword
-	javaImport  SyntaxToken
-	packagePath []SyntaxToken
+	Keyword     Keyword
+	JavaImport  SyntaxToken
+	PackagePath []SyntaxToken
 }
 
 type PackageStatement struct {
-	keyword     Keyword
-	packagePath []SyntaxToken
+	Keyword     Keyword
+	PackagePath []SyntaxToken
 }
 
 type Name struct {
-	name SyntaxToken
+	Name SyntaxToken
 }
 
 type AttributeI struct {
-    Name string
-    JavaType JavaType
+	Name     string
+	JavaType JavaType
 }

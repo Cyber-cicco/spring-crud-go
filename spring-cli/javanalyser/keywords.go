@@ -124,3 +124,11 @@ var JAVA_BASE_TYPES = []string{
     "byte",
     "short",
 }
+
+var CONTROLLER_ANNOATIONS = []string{
+    "GetMapping",
+    "PostMapping",
+    "PutMapping",
+    "DeleteMapping",
+    "PatchMapping",
+}

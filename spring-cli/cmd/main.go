@@ -110,4 +110,6 @@ func configExecute(configCmd *flag.FlagSet) {
 
 func angularExecute() {
 	services.WriteAngularInterfaceFile()
+    services.WriteAngularServiceFile()
 }
+

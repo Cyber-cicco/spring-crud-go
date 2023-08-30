@@ -30,33 +30,33 @@ func createClass(tokens [][]SyntaxToken, i int) (Class, int) {
 	annotations := []Annotation{}
 	j := 0
 	if tokens[i][j].kind == enums.ANNOTATION_DELIMITER_KIND {
-		annotations, j = createAnnotations(tokens[i])
-		class.annotations = annotations
+		annotations, j = createAnnotations(tokens[i], j)
+		class.Annotations = annotations
 		j++
 	}
 	if !slices.Contains(CLASS_IDENTIFIER_KEYWORDS, string(tokens[i][j].Value)) {
 		utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
 	}
 	if tokens[i][j].Value == "public" {
-		class.visibility = Keyword{name: tokens[i][j]}
+		class.Visibility = Keyword{Name: tokens[i][j]}
 		j++
 	} else {
-		class.visibility =  Keyword{name: SyntaxToken{kind: enums.WORD_KIND, Value: "protected"}}
+		class.Visibility =  Keyword{Name: SyntaxToken{kind: enums.WORD_KIND, Value: "protected"}}
 	}
 	if !slices.Contains(CLASS_NAME_KEYWORDS, string(tokens[i][j].Value)) {
 		switch string(tokens[i][j].Value) {
 		case "final":
-			class.final = true
+			class.Final = true
 			j++
 		case "abstract":
-			class.abstract = true
+			class.Abstract = true
 			j++
 		default:
 			utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
 		}
 	}
 	if slices.Contains(CLASS_NAME_KEYWORDS, string(tokens[i][j].Value)) {
-		class.classType = Keyword{name: tokens[i][j]}
+		class.ClassType = Keyword{Name: tokens[i][j]}
 		j++
 	} else {
 		utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
@@ -64,7 +64,7 @@ func createClass(tokens [][]SyntaxToken, i int) (Class, int) {
 	if tokens[i][j].kind != enums.WORD_KIND {
 		utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
 	}
-	class.name = createName(tokens[i][j])
+	class.Name = createName(tokens[i][j])
 	j++
 	if tokens[i][j].kind == enums.OPEN_BRACKET_KIND {
 		i++
@@ -73,13 +73,13 @@ func createClass(tokens [][]SyntaxToken, i int) (Class, int) {
 	}
 	if tokens[i][j].Value != "extends" {
 		j++
-		class.extends, j = createJavaType(tokens[i], j)
+		class.Extends, j = createJavaType(tokens[i], j)
 	}
 	if tokens[i][j].Value != "implements" {
 		j++
 		for tokens[i][j].kind != enums.OPEN_BRACKET_KIND {
 			singleImplement, j := createJavaType(tokens[i], j)
-			class.implements = append(class.implements, singleImplement)
+			class.Implements = append(class.Implements, singleImplement)
 			if tokens[i][j].kind != enums.COMMA_KIND {
 				utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
 			}
@@ -93,7 +93,7 @@ func createClassBody(tokens [][]SyntaxToken, i int, class *Class) {
 	for tokens[i][j].kind != enums.CLOSE_BRACKET_KIND {
 		annotations := []Annotation{}
 		if tokens[i][j].kind == enums.ANNOTATION_DELIMITER_KIND {
-			annotations, j = createAnnotations(tokens[i])
+			annotations, j = createAnnotations(tokens[i], j)
 		}
 		if slices.Contains(METHOD_IDENTIFIER_KEYWORDS, string(tokens[i][j].Value)) {
 			k := j
@@ -109,13 +109,13 @@ func createClassBody(tokens [][]SyntaxToken, i int, class *Class) {
 						}
 						attribute := Attribute{}
 						attribute, i = createAttribute(tokens, i, j, annotations)
-						class.attributes = append(class.attributes, attribute)
+						class.Attributes = append(class.Attributes, attribute)
 						j = 0
 						break
 					case enums.OPEN_BRACKET_KIND:
 						method := Method{}
 						method, i = createMethod(tokens, i, j, annotations)
-						class.methods = append(class.methods, method)
+						class.Methods = append(class.Methods, method)
 						j = 0
 						break
 					default:
@@ -131,44 +131,47 @@ func createClassBody(tokens [][]SyntaxToken, i int, class *Class) {
 
 func createMethod(tokens [][]SyntaxToken, i, j int, annotations []Annotation) (Method, int) {
 	method := Method{}
-    method.annotations = annotations
+    method.Annotations = annotations
 	switch string(tokens[i][j].Value) {
 	case "public", "private", "protected":
-		method.visibility =  Keyword{name: tokens[i][j]}
+		method.Visibility =  Keyword{Name: tokens[i][j]}
 		j++
 	default:
-		method.visibility =  Keyword{name: SyntaxToken{kind: enums.WORD_KIND, Value: "protected"}}
+		method.Visibility =  Keyword{Name: SyntaxToken{kind: enums.WORD_KIND, Value: "protected"}}
 	}
 	if tokens[i][j].Value == "static" {
-		method.static = true
+		method.Static = true
 		j++
 	}
 	if tokens[i][j].Value == "abstract" {
-		method.abstract = true
-		if method.static {
+		method.Abstract = true
+		if method.Static {
 			utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
 		}
 		j++
 	}
-	method.returnType, j = createJavaType(tokens[i], j)
-	method.name = createName(tokens[i][j])
+	method.ReturnType, j = createJavaType(tokens[i], j)
+	method.Name = createName(tokens[i][j])
 	j++
 	if tokens[i][j].kind == enums.OPEN_PARENTHESIS_KIND {
 		for tokens[i][j].kind != enums.CLOSE_PARENTHESIS_KIND {
 			j++
-			if tokens[i][j].kind == enums.WORD_KIND {
+			if tokens[i][j].kind == enums.WORD_KIND || tokens[i][j].kind == enums.ANNOTATION_DELIMITER_KIND {
 				variable := Variable{}
-				variable.javaType, j = createJavaType(tokens[i], j)
+                if tokens[i][j].kind == enums.ANNOTATION_DELIMITER_KIND {
+                    variable.Annotations, j = createAnnotations(tokens[i], j)
+                }
+				variable.JavaType, j = createJavaType(tokens[i], j)
 				j++
-				variable.name = tokens[i][j]
-				method.parameters = append(method.parameters, variable)
+				variable.Name = tokens[i][j]
+				method.Parameters = append(method.Parameters, variable)
 			}
 		}
 	} else {
 		utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
 	}
     i++
-    method.body, i = createBloc(tokens, i)
+    method.Body, i = createBloc(tokens, i)
 	return method, i
 }
 
@@ -186,7 +189,7 @@ func createBloc(tokens [][]SyntaxToken, i int) (Bloc, int) {
                 newBloc := Bloc{}
                 i++
                 newBloc, i = createBloc(tokens, i)
-                bloc.subBlocks = append(bloc.subBlocks, newBloc)
+                bloc.SubBlocks = append(bloc.SubBlocks, newBloc)
             }
             j++
         }
@@ -198,35 +201,35 @@ func createBloc(tokens [][]SyntaxToken, i int) (Bloc, int) {
 
 func createAttribute(tokens [][]SyntaxToken, i, j int, annotations []Annotation) (Attribute, int) {
 	attribute := Attribute{}
-    attribute.annotations = annotations
+    attribute.Annotations = annotations
 	switch string(tokens[i][j].Value) {
 	case "public", "private", "protected":
-		attribute.visibility = Keyword{name: tokens[i][j]}
+		attribute.Visibility = Keyword{Name: tokens[i][j]}
 		j++
 	default:
-		attribute.visibility = Keyword{name: SyntaxToken{kind: enums.WORD_KIND, Value: "protected"}}
+		attribute.Visibility = Keyword{Name: SyntaxToken{kind: enums.WORD_KIND, Value: "protected"}}
 	}
 	if tokens[i][j].Value == "static" {
-		attribute.static = true
+		attribute.Static = true
 		j++
 	}
 	if tokens[i][j].Value == "final" {
-		attribute.final = true
+		attribute.Final = true
 		j++
 	}
-	attribute.javaType, j = createJavaType(tokens[i], j)
-	attribute.name = createName(tokens[i][j])
+	attribute.JavaType, j = createJavaType(tokens[i], j)
+	attribute.Name = createName(tokens[i][j])
 	j++
 	if tokens[i][j].kind == enums.END_OF_LINE_KIND {
-		attribute.null = true
+		attribute.Null = true
 		i++
 		return attribute, i
 	}
 	if tokens[i][j].kind == enums.EQUAL_KIND {
 		j++
-		attribute.value = ""
+		attribute.Value = ""
 		for tokens[i][j].kind != enums.END_OF_LINE_KIND {
-			attribute.value += tokens[i][j].Value
+			attribute.Value += tokens[i][j].Value
 			j++
 		}
 	} else {
@@ -256,19 +259,18 @@ func createJavaType(tokens []SyntaxToken, j int) (JavaType, int) {
 	return javaType, j
 }
 
-func createAnnotations(tokens []SyntaxToken) ([]Annotation, int) {
+func createAnnotations(tokens []SyntaxToken, j int) ([]Annotation, int) {
 	if len(tokens) < 2 {
 		utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[0].Value), config.ERR_JAVA_PARSING_FAILED)
 	}
-	j := 0
 	annotations := []Annotation{}
 	for tokens[j].kind == enums.ANNOTATION_DELIMITER_KIND {
 		j++
 		annotation := Annotation{}
-		annotation.name = createName(tokens[j])
+		annotation.Name = createName(tokens[j])
 		j++
 		if tokens[j].kind == enums.OPEN_PARENTHESIS_KIND {
-			annotation.variables, j = createAnnotationVariable(tokens, j)
+			annotation.Variables, j = createAnnotationVariable(tokens, j)
 		}
 		annotations = append(annotations, annotation)
 	}
@@ -280,9 +282,9 @@ func createAnnotationVariable(tokens []SyntaxToken, j int) ([]Variable, int) {
 	variables := []Variable{}
 	for tokens[j].kind != enums.CLOSE_PARENTHESIS_KIND {
 		variable := Variable{}
-		variable.name.Value = ""
+		variable.Name.Value = ""
 		if tokens[j].kind == enums.WORD_KIND {
-			variable.name = tokens[j]
+			variable.Name = tokens[j]
 			j++
 			if tokens[j].kind != enums.EQUAL_KIND {
 				utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[j].Value), config.ERR_JAVA_PARSING_FAILED)
@@ -290,17 +292,17 @@ func createAnnotationVariable(tokens []SyntaxToken, j int) ([]Variable, int) {
 			j++
 		}
 		if tokens[j].kind == enums.STRING_DELIMITER_KIND {
-			if variable.name.Value == "" {
+			if variable.Name.Value == "" {
 				if len(variables) > 0 {
 					utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[j].Value), config.ERR_JAVA_PARSING_FAILED)
 				} else {
-					variable.name.Value = enums.DEFAULT_VAR_NAME
+					variable.Name.Value = enums.DEFAULT_VAR_NAME
 				}
 			}
 			j++
-			variable.value = ""
+			variable.Value = ""
 			for tokens[j].kind != enums.STRING_DELIMITER_KIND && j < len(tokens) {
-				variable.value += tokens[j].Value
+				variable.Value += tokens[j].Value
 				j++
 			}
 			if j == len(tokens)-1 {
@@ -317,7 +319,7 @@ func createAnnotationVariable(tokens []SyntaxToken, j int) ([]Variable, int) {
 }
 
 func createName(token SyntaxToken) Name {
-	return Name{name: token}
+	return Name{Name: token}
 }
 
 // TODO : régler le bug du package
@@ -339,15 +341,15 @@ func intializedJavaFile(tokens [][]SyntaxToken, i int) (JavaInterpreted, int) {
 
 func createImportStatement(tokens []SyntaxToken) ImportStatement {
 	importStatement := ImportStatement{
-		keyword: Keyword{name: tokens[0]},
+		Keyword: Keyword{Name: tokens[0]},
 	}
 	j := 0
 	for tokens[j].kind != enums.END_OF_LINE_KIND {
 		if tokens[j].kind == enums.WORD_KIND || tokens[j].kind == enums.STAR_KIND {
 			if tokens[j+1].kind == enums.DOT_KIND {
-				importStatement.packagePath = append(importStatement.packagePath, tokens[j])
+				importStatement.PackagePath = append(importStatement.PackagePath, tokens[j])
 			} else {
-				importStatement.javaImport = tokens[j]
+				importStatement.JavaImport = tokens[j]
 			}
 		} else if tokens[j].kind != enums.DOT_KIND {
 			utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[j].Value), config.ERR_JAVA_PARSING_FAILED)
@@ -359,12 +361,12 @@ func createImportStatement(tokens []SyntaxToken) ImportStatement {
 
 func createPackageStatement(tokens []SyntaxToken) PackageStatement {
 	packageStatement := PackageStatement{
-		keyword: Keyword{name: tokens[0]},
+		Keyword: Keyword{Name: tokens[0]},
 	}
 	j := 1
 	for tokens[j].kind != enums.END_OF_LINE_KIND {
 		if tokens[j].kind == enums.WORD_KIND {
-			packageStatement.packagePath = append(packageStatement.packagePath, tokens[j])
+			packageStatement.PackagePath = append(packageStatement.PackagePath, tokens[j])
 		} else if tokens[j].kind != enums.DOT_KIND {
 			utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[j].Value), config.ERR_JAVA_PARSING_FAILED)
 		}

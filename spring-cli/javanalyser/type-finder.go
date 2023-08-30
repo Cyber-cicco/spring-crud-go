@@ -1,7 +1,6 @@
 package javanalyser
 
 import (
-    "fmt"
     "strings"
 
     "fr.cybercicco/springgo/spring-cli/config"
@@ -35,12 +34,11 @@ func FindTsType(javaType JavaType, paramsMap map[string]string, className string
     if ok {
         return tsType
     } else if strings.HasSuffix(javaType.Name.Value, config.CONFIG.DtoPackage.Suffix) {
-        tsTypeName := javaType.Name.Value[:len(javaType.Name.Value)-len(config.CONFIG.DtoPackage.Suffix)]
-        fmt.Println(tsTypeName)
+        tsTypeName := utils.RemoveSuffix(javaType.Name.Value, config.CONFIG.DtoPackage.Suffix)
         if tsTypeName != className {
-            paramsMap["{%file_import%}"] = utils.ToInterfaceFileName(tsTypeName)[0:len(utils.ToInterfaceFileName(tsTypeName))-3]
+            paramsMap["{%file_import%}"] = utils.RemoveSuffix(utils.ToInterfaceFileName(tsTypeName), ".ts")
             paramsMap["{%new_import%}"] = tsTypeName
-            paramsMap["{%imports%}"] += utils.FormatString(paramsMap, angular.INTERFACE_IMPORT_TEMPLATE)
+            paramsMap["{%imports%}"] += utils.FormatString(paramsMap, angular.ENTITY_IMPORT_TEMPLATE)
         }
         return tsTypeName
     } else {

@@ -41,7 +41,7 @@ func FormatString(paramsMap map[string]string, s string) string {
             if !ok {
                 HandleTechnicalError(errors.New("variable not found"), "Erreur de formattage du template : la variable "+
                 s[positionOfLastOpenVar:positionOfLastCloseVar]+
-                " n'a pas été trouvée. Si vous avez changé le code oule template,"+
+                " n'a pas été trouvée. Si vous avez changé le code ou le template,"+
                 "assurez-vous de la correspondance entre la map crée dans createParamMap du fichier java-writer.go et le template pour lequel l'erreur a été levé")
             }
             formattedTemplate = append(formattedTemplate, formattedVar)

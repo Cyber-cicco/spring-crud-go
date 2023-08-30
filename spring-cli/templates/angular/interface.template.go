@@ -7,5 +7,5 @@ export interface {%class_name%} {
 `
 var INTERFACE_ATTRIBUTE_TEMPLATE = `  {%attribute_name%}: {%attribute_type%};
 `
-var INTERFACE_IMPORT_TEMPLATE = `import { {%new_import%} } from './{%file_import%}'
+var ENTITY_IMPORT_TEMPLATE = `import { {%new_import%} } from './{%file_import%}'
 `

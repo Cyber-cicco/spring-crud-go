@@ -16,11 +16,38 @@ func WriteAngularServiceFile(){
 
 func createTsService(fileContent string){
     tokens := javanalyser.LexFile(&fileContent)
-    javanalyser.PrintTokens(tokens)
     javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
-    javanalyser.PrintClassAttributes(javaFile)
-    javanalyser.PrintClassMethods(javaFile)
+    classPath := javanalyser.GetClassPath(javaFile)
+    httpMethods := ""
+    fmt.Println("caca")
+    for _, javaMethod := range javaFile.JavaClass.Methods{
+        httpVerb := javanalyser.FindHttpVerb(javaMethod) 
+        if httpVerb != ""{
+            createOneMethod(&classPath, &httpMethods, javaFile, javaMethod)
+        }
+    }
 }
+
+func createOneMethod(classPath, httpMethods *string, javaFile javanalyser.JavaInterpreted, method javanalyser.Method){
+        paramsMap := prepareHttpMap(javaFile, method, *httpMethods)
+        methodPath := javanalyser.GetMethodPath(javaFile, method, *classPath)
+        fmt.Println(methodPath)
+        fmt.Println(paramsMap)
+}
+
+
+func prepareHttpMap(javaFile javanalyser.JavaInterpreted, method javanalyser.Method, httpMethod string) map[string]string {
+    paramsMap := map[string]string{}
+    paramsMap["{%target_name%}"] = javanalyser.FindTsType(method.ReturnType, paramsMap, javaFile.JavaClass.Name.Name.Value)
+    paramsMap["{%method%}"] = httpMethod
+    paramsMap["{%by%}"] = ""
+    for _, variable := range method.Parameters{
+        fmt.Printf("variable: %v\n", variable)
+    }
+    return paramsMap
+
+}
+
 
 func createTsInterface(fileContent string){
     tokens := javanalyser.LexFile(&fileContent)
@@ -32,7 +59,6 @@ func createTsInterface(fileContent string){
         "{%imports%}": "",
     }
     var attributesString = ""
-    fmt.Println("----", interfaceName, "----")
     for _, attribute := range attributes{
         paramsMap["{%attribute_name%}"] = utils.ToAttributeName(attribute.Name)
         paramsMap["{%attribute_type%}"] = javanalyser.FindTsType(attribute.JavaType, paramsMap, interfaceName)

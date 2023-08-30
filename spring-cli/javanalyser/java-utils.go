@@ -2,6 +2,11 @@ package javanalyser
 
 import (
 	"fmt"
+	"strings"
+
+	"fr.cybercicco/springgo/spring-cli/entities/enums"
+	"fr.cybercicco/springgo/spring-cli/utils"
+	"golang.org/x/exp/slices"
 )
 
 func PrintLex(tokens [][]SyntaxToken){
@@ -26,7 +31,7 @@ func PrintFile(javaFile JavaInterpreted){
 }
 
 func PrintClassAnnotations(javaFile JavaInterpreted){
-    for _, javaClassAnnotation := range javaFile.JavaClass.annotations{
+    for _, javaClassAnnotation := range javaFile.JavaClass.Annotations{
         fmt.Printf("%+v\n", javaClassAnnotation)
     }
 }
@@ -37,7 +42,7 @@ func PrintClass(javaFile JavaInterpreted){
 
 func PrintClassAttributes(javaFile JavaInterpreted){
     fmt.Println("Attributes:")
-    for _, javaClassAttribute := range javaFile.JavaClass.attributes{
+    for _, javaClassAttribute := range javaFile.JavaClass.Attributes{
         fmt.Printf("%+v\n", javaClassAttribute)
     }
 }
@@ -54,21 +59,60 @@ func PrintTokens(tokens [][]SyntaxToken){
 
 func PrintClassMethods(javaFile JavaInterpreted){
     fmt.Println("Methods:")
-    fmt.Println(len(javaFile.JavaClass.methods))
-    for _, javaClassMethod := range javaFile.JavaClass.methods{
+    fmt.Println(len(javaFile.JavaClass.Methods))
+    for _, javaClassMethod := range javaFile.JavaClass.Methods{
         fmt.Printf("%+v\n", javaClassMethod)
     }
 }
 
 func GetClassAttributes(javaFile JavaInterpreted) []AttributeI{
-    attributes := make([]AttributeI, len(javaFile.JavaClass.attributes))
-    for i, javaClassAttribute := range javaFile.JavaClass.attributes{
-        attributes[i].Name = javaClassAttribute.name.name.Value
-        attributes[i].JavaType = javaClassAttribute.javaType
+    attributes := make([]AttributeI, len(javaFile.JavaClass.Attributes))
+    for i, javaClassAttribute := range javaFile.JavaClass.Attributes{
+        attributes[i].Name = javaClassAttribute.Name.Name.Value
+        attributes[i].JavaType = javaClassAttribute.JavaType
     }
     return attributes
 }
 
 func GetClassName(javaFile JavaInterpreted) string{
-    return javaFile.JavaClass.name.name.Value
+    return javaFile.JavaClass.Name.Name.Value
 }
+
+func GetClassPath(javaFile JavaInterpreted) string {
+    classPath := ""
+    for _, annotation := range javaFile.JavaClass.Annotations {
+        if annotation.Name.Name.Value == "RequestMapping" {
+            for _, annotationValue := range annotation.Variables {
+                if annotationValue.Name.Value == "value" || annotationValue.Name.Value == "path" || annotationValue.Name.Value == enums.DEFAULT_VAR_NAME {
+                    classPath = annotationValue.Value
+                }
+            }
+        }
+    }
+    return classPath
+}
+
+func GetMethodPath(javaFile JavaInterpreted, method Method, classPath string) string{
+    methodPath := ""
+    for _, annotation := range method.Annotations {
+        if slices.Contains(CONTROLLER_ANNOATIONS, annotation.Name.Name.Value) {
+            for _, annotationValue := range annotation.Variables {
+                if annotationValue.Name.Value == "value" || annotationValue.Name.Value == "path" || annotationValue.Name.Value == enums.DEFAULT_VAR_NAME {
+                    methodPath = annotationValue.Value
+                }
+            }
+        }
+    }
+    return classPath + methodPath
+}
+
+func FindHttpVerb(method Method) string {
+    for _, annotation := range method.Annotations {
+        if slices.Contains(CONTROLLER_ANNOATIONS, annotation.Name.Name.Value){
+            return strings.ToLower(utils.RemoveSuffix(annotation.Name.Name.Value, "Mapping"))
+        }
+    }
+    return ""
+}
+
+
