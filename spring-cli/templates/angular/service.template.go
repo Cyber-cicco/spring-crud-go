@@ -24,3 +24,11 @@ var SERVICE_METHOD_TEMPLATE =
     return this.http.{%method%}<{%return_type%}>({%url_changed%}{%request_params%}{%body%})
   }
 `
+var PARAMETER_TEMPLATE =
+`{%name%} : {%type%}`
+
+var URL_CHANGER = 
+`
+    let newURL = {%url%}
+    newURL = newURL.replace('{{%match%}}', {%match%});
+`

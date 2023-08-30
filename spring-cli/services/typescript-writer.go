@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strings"
 
 	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
@@ -10,42 +11,69 @@ import (
 	"fr.cybercicco/springgo/spring-cli/utils"
 )
 
+
 func WriteAngularServiceFile(){
-    daos.ReadJavaFileBySuffix(config.CONFIG.ControllerPackage.Suffix + ".java", createTsService)
+    daos.ReadJavaFileBySuffix(config.CONFIG.ControllerPackage.Suffix + ".java", createTsService2)
+}
+
+func createTsService2(fileContent string){
+    tokens := javanalyser.LexFile(&fileContent)
+    javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
+    mapJavaService(javaFile)
 }
 
 func createTsService(fileContent string){
     tokens := javanalyser.LexFile(&fileContent)
     javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
     classPath := javanalyser.GetClassPath(javaFile)
-    httpMethods := ""
-    fmt.Println("caca")
     for _, javaMethod := range javaFile.JavaClass.Methods{
         httpVerb := javanalyser.FindHttpVerb(javaMethod) 
         if httpVerb != ""{
-            createOneMethod(&classPath, &httpMethods, javaFile, javaMethod)
+            createOneMethod(&classPath, &httpVerb, javaFile, javaMethod)
         }
     }
 }
 
-func createOneMethod(classPath, httpMethods *string, javaFile javanalyser.JavaInterpreted, method javanalyser.Method){
-        paramsMap := prepareHttpMap(javaFile, method, *httpMethods)
-        methodPath := javanalyser.GetMethodPath(javaFile, method, *classPath)
+func createOneMethod(classPath, httpVerb *string, javaFile javanalyser.JavaInterpreted, method javanalyser.Method){
+        paramsMap := map[string]string{}
+        methodPath := javanalyser.GetMethodPath(method, *classPath)
+        prepareUrlMap(javaFile, method, &methodPath)
+        prepareHttpMap(javaFile, method, *httpVerb)
         fmt.Println(methodPath)
         fmt.Println(paramsMap)
 }
 
+func prepareUrlMap(javaFile javanalyser.JavaInterpreted, method javanalyser.Method, methodPath *string){
+}
 
-func prepareHttpMap(javaFile javanalyser.JavaInterpreted, method javanalyser.Method, httpMethod string) map[string]string {
+
+func prepareHttpMap(javaFile javanalyser.JavaInterpreted, method javanalyser.Method, httpVerb string) {
     paramsMap := map[string]string{}
     paramsMap["{%target_name%}"] = javanalyser.FindTsType(method.ReturnType, paramsMap, javaFile.JavaClass.Name.Name.Value)
-    paramsMap["{%method%}"] = httpMethod
+    paramsMap["{%method%}"] = httpVerb
     paramsMap["{%by%}"] = ""
-    for _, variable := range method.Parameters{
-        fmt.Printf("variable: %v\n", variable)
-    }
-    return paramsMap
+    paramsMap["{%target_name%}"]  = createParameters(method, paramsMap)
 
+}
+
+func createParameters(method javanalyser.Method, paramsMap map[string]string) string {
+    parameters := []string{}
+    paramsMap["{%url_changer%}"] = ""
+    for _, variable := range method.Parameters{
+        createUrlChanger(variable, paramsMap)    
+        paramsMap["{%name%}"] = variable.Name.Value
+        paramsMap["{%type%}"] = javanalyser.FindTsType(variable.JavaType, paramsMap, "")
+        parameters = append(parameters, utils.FormatString(paramsMap, angular.PARAMETER_TEMPLATE))
+    }
+    return strings.Join(parameters, ", ")
+}
+
+func createUrlChanger(variable javanalyser.Variable, paramsMap map[string]string){
+    for _, annotation := range variable.Annotations {
+        if annotation.Name.Name.Value == "PathVariable"{
+            
+        }
+    }
 }
 
 

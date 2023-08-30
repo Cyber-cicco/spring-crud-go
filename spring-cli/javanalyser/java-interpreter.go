@@ -162,8 +162,8 @@ func createMethod(tokens [][]SyntaxToken, i, j int, annotations []Annotation) (M
                     variable.Annotations, j = createAnnotations(tokens[i], j)
                 }
 				variable.JavaType, j = createJavaType(tokens[i], j)
-				j++
 				variable.Name = tokens[i][j]
+				j++
 				method.Parameters = append(method.Parameters, variable)
 			}
 		}

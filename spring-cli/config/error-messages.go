@@ -18,3 +18,4 @@ var ERR_NO_JPA_FILE = "Il n'y a pas de fichier de configuration d'entités JPA d
 var ERR_CONFIG_BAD_USAGE = "Erreur dans l'utilisation de la commande 'config'"
 var ERR_SRC_FOLDER_NOT_IN_ROOT = "Le dossier src dans lequel se trouve tous les "
 var ERR_JAVA_PARSING_FAILED = "Erreur dans le parsing d'un fichier java"
+var ERR_JAVA_ANALYSING =  "Erreur dans l'analyse d'un fichier java: une méthode de controller semble ne pas avoir été annotée de façon à permettre de repérer"

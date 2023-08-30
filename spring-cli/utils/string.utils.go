@@ -79,18 +79,34 @@ func GetClassNameAndPackageFromArgs(jpaCname string) (string, string) {
 }
 
 func ToInterfaceFileName(interfaceName string) string {
+    return strings.ToLower(ChangeStringPattern(interfaceName, "-", isUpper)) + ".ts"
+}
+
+func isUpper(char byte) bool {
+    return unicode.IsUpper(rune(char))
+}
+
+func isSlash(char byte) bool {
+    return char == '/'
+}
+
+func ChangeStringPattern(name string, appendedChars string, condition func(char byte) bool) string {
     newName := ""
-    positionOfLastUpper := 0
-    for i := 0; i < len(interfaceName); i++ {
-        if unicode.IsUpper(rune(interfaceName[i])) {
+    positionOfLastPattern := 0
+    for i := 0; i < len(name); i++ {
+        if condition(name[i])  {
             if i != 0 {
-                newName += interfaceName[positionOfLastUpper:i] + "-"
-                positionOfLastUpper = i
+                newName += name[positionOfLastPattern:i] + appendedChars
+                positionOfLastPattern = i
             }
         }
-        if i == len(interfaceName)-1 {
-            newName += interfaceName[positionOfLastUpper:]
+        if i == len(name)-1 {
+            newName += name[positionOfLastPattern:]
         }
     }
-    return strings.ToLower(newName) + ".ts"
+    return newName
+}
+
+func CreateUrlVarName(methodPath string) string {
+    return strings.ReplaceAll(strings.ToUpper("URL_" +  ChangeStringPattern(methodPath, "_", isSlash)), "/", "") 
 }
