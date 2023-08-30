@@ -1,6 +1,7 @@
 package javanalyser
 
 import (
+	"fmt"
 	"unicode"
 
 	"fr.cybercicco/springgo/spring-cli/entities/enums"
@@ -41,6 +42,15 @@ func lex(line []rune) SyntaxToken{
         token := SyntaxToken{ Value : string(line[startPos:position]) ,position : startPos, kind : enums.NUMBER_KIND, }
         return token
     }
+    if line[position] == '"' && position != 0 && line[position-1] != '\\' {
+        position++
+        for line[position] != '"' {
+            position++
+        }
+        token := SyntaxToken{ Value : string(line[startPos + 1 :position]) ,position : startPos, kind : enums.STRING_KIND, }
+        position++
+        return token
+    }
 
     if line[position] == '/'{
         if line[position+1] == '/'{
@@ -64,8 +74,6 @@ func lex(line []rune) SyntaxToken{
         return lex(line)
     case '@':
         return SyntaxToken{ Value  : next(), position : startPos, kind : enums.ANNOTATION_DELIMITER_KIND, }
-    case '"':
-        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.STRING_DELIMITER_KIND, }
     case '(':
         return SyntaxToken{ Value  : next(), position : startPos, kind : enums.OPEN_PARENTHESIS_KIND, }
     case ')':

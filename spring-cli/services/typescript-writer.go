@@ -13,69 +13,71 @@ import (
 
 
 func WriteAngularServiceFile(){
-    daos.ReadJavaFileBySuffix(config.CONFIG.ControllerPackage.Suffix + ".java", createTsService2)
-}
-
-func createTsService2(fileContent string){
-    tokens := javanalyser.LexFile(&fileContent)
-    javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
-    mapJavaService(javaFile)
+    daos.ReadJavaFileBySuffix(config.CONFIG.ControllerPackage.Suffix + ".java", createTsService)
 }
 
 func createTsService(fileContent string){
+    paramsMap := map[string]string{}
     tokens := javanalyser.LexFile(&fileContent)
     javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
-    classPath := javanalyser.GetClassPath(javaFile)
-    for _, javaMethod := range javaFile.JavaClass.Methods{
-        httpVerb := javanalyser.FindHttpVerb(javaMethod) 
-        if httpVerb != ""{
-            createOneMethod(&classPath, &httpVerb, javaFile, javaMethod)
+    serviceStruct := mapJavaService(javaFile)
+    paramsMap["{%urls%}"] = createServiceUrls(&serviceStruct)
+    paramsMap["{%class_name%}"] = serviceStruct.Name
+    paramsMap["{%http%}"] = createHttpBody(&serviceStruct, paramsMap)
+    fmt.Printf("paramsMap: %v\n", paramsMap)
+}
+
+func createHttpBody(serviceStruct *AngularService, paramsMap map[string]string) string {
+    methods := make([]string, len(serviceStruct.Http))
+    for i, method := range serviceStruct.Http {
+        paramsMap["{%by%}"] = ""
+        paramsMap["{%request_params%}"] = ""
+        paramsMap["{%body%}"] = ""
+        paramsMap["{%url_changer%}"] = ""
+        paramsMap["{%return_type%}"] = ""
+        paramsMap["{%url_changed%}"] = ""
+        paramsMap["{%request_params%}"] = ""
+        paramsMap["{%body%}"] = ""
+        paramsMap["{%method%}"] = method.HttpVerb
+        paramsMap["{%required_args%}"] = createServiceArgs(method, paramsMap)
+        methods[i] = utils.FormatString(paramsMap, angular.SERVICE_METHOD_TEMPLATE)
+    }
+    return ""
+}
+
+func createServiceArgs(method HttpMethod, paramsMap map[string]string) string {
+    args := make([]string, len(method.Args))
+    for i, arg := range method.Args {
+        paramsMap["{%type%}"] = arg.Type
+        paramsMap["{%name%}"] = arg.Name
+        if arg.Scope == "PathVariable" {
+            paramsMap["{%url_changer%}"] = createUrlChanger(arg, method)
         }
+        args[i] = utils.FormatString(paramsMap, angular.PARAMETER_TEMPLATE)
     }
+    return ""
 }
 
-func createOneMethod(classPath, httpVerb *string, javaFile javanalyser.JavaInterpreted, method javanalyser.Method){
-        paramsMap := map[string]string{}
-        methodPath := javanalyser.GetMethodPath(method, *classPath)
-        prepareUrlMap(javaFile, method, &methodPath)
-        prepareHttpMap(javaFile, method, *httpVerb)
-        fmt.Println(methodPath)
-        fmt.Println(paramsMap)
-}
-
-func prepareUrlMap(javaFile javanalyser.JavaInterpreted, method javanalyser.Method, methodPath *string){
-}
-
-
-func prepareHttpMap(javaFile javanalyser.JavaInterpreted, method javanalyser.Method, httpVerb string) {
-    paramsMap := map[string]string{}
-    paramsMap["{%target_name%}"] = javanalyser.FindTsType(method.ReturnType, paramsMap, javaFile.JavaClass.Name.Name.Value)
-    paramsMap["{%method%}"] = httpVerb
-    paramsMap["{%by%}"] = ""
-    paramsMap["{%target_name%}"]  = createParameters(method, paramsMap)
-
-}
-
-func createParameters(method javanalyser.Method, paramsMap map[string]string) string {
-    parameters := []string{}
-    paramsMap["{%url_changer%}"] = ""
-    for _, variable := range method.Parameters{
-        createUrlChanger(variable, paramsMap)    
-        paramsMap["{%name%}"] = variable.Name.Value
-        paramsMap["{%type%}"] = javanalyser.FindTsType(variable.JavaType, paramsMap, "")
-        parameters = append(parameters, utils.FormatString(paramsMap, angular.PARAMETER_TEMPLATE))
+func createUrlChanger(arg Arg, method HttpMethod) string {
+    paramsMap := map[string]string {
+        "{%url%}" : method.Url.VarName,
+        "{%match%}" : arg.Name,
     }
-    return strings.Join(parameters, ", ")
+    return utils.FormatString(paramsMap, angular.URL_CHANGER)
 }
 
-func createUrlChanger(variable javanalyser.Variable, paramsMap map[string]string){
-    for _, annotation := range variable.Annotations {
-        if annotation.Name.Name.Value == "PathVariable"{
-            
+func createServiceUrls(serviceStruct *AngularService) string {
+    urls := make([]string, len(serviceStruct.Urls))
+    for i, url := range serviceStruct.Urls {
+        paramsMap := map[string]string{
+            "{%url_var%}" : url.VarName,
+            "{%path%}" : url.Path,
         }
+        urls[i] = utils.FormatString(paramsMap, angular.URL_DECLARATION)
     }
-}
+    return strings.Join(urls, "\n")
 
+}
 
 func createTsInterface(fileContent string){
     tokens := javanalyser.LexFile(&fileContent)

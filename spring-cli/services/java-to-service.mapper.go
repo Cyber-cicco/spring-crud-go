@@ -37,9 +37,9 @@ type URL struct {
 
 func mapJavaService(javaFile javanalyser.JavaInterpreted) AngularService {
     angularService := AngularService{}
+    angularService.Name = utils.RemoveSuffix(javaFile.JavaClass.Name.Name.Value, config.CONFIG.ControllerPackage.Suffix) + "HttpService"
     classPath := javanalyser.GetClassPath(javaFile)
     createUrls(&angularService, javaFile.JavaClass.Methods, classPath)
-    fmt.Printf("angularService: %v\n", angularService)
     return angularService
 }
 
@@ -69,6 +69,8 @@ func createMethodForUrl(angularService *AngularService, method javanalyser.Metho
     url, err := findUrlForMethod(methodPath, angularService)
     utils.HandleTechnicalError(err, "Erreur dans l'analyse d'un fichier Java")
     httpMethod.Url = url
+    httpMethod.HttpVerb = httpVerb
+    httpMethod.ReturnType = javanalyser.FindTsType(method.ReturnType, map[string]string{}, "")
     angularService.Http = append(angularService.Http, httpMethod)
 }
 

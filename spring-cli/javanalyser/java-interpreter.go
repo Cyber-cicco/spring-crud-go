@@ -271,6 +271,7 @@ func createAnnotations(tokens []SyntaxToken, j int) ([]Annotation, int) {
 		j++
 		if tokens[j].kind == enums.OPEN_PARENTHESIS_KIND {
 			annotation.Variables, j = createAnnotationVariable(tokens, j)
+            j++
 		}
 		annotations = append(annotations, annotation)
 	}
@@ -291,7 +292,7 @@ func createAnnotationVariable(tokens []SyntaxToken, j int) ([]Variable, int) {
 			}
 			j++
 		}
-		if tokens[j].kind == enums.STRING_DELIMITER_KIND {
+		if tokens[j].kind == enums.STRING_KIND {
 			if variable.Name.Value == "" {
 				if len(variables) > 0 {
 					utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[j].Value), config.ERR_JAVA_PARSING_FAILED)
@@ -299,15 +300,7 @@ func createAnnotationVariable(tokens []SyntaxToken, j int) ([]Variable, int) {
 					variable.Name.Value = enums.DEFAULT_VAR_NAME
 				}
 			}
-			j++
-			variable.Value = ""
-			for tokens[j].kind != enums.STRING_DELIMITER_KIND && j < len(tokens) {
-				variable.Value += tokens[j].Value
-				j++
-			}
-			if j == len(tokens)-1 {
-				utils.HandleTechnicalError(fmt.Errorf("Unexpected end of line %s", tokens[j].Value), config.ERR_JAVA_PARSING_FAILED)
-			}
+			variable.Value = tokens[j].Value
 		}
 		if j == len(tokens)-1 {
 			utils.HandleTechnicalError(fmt.Errorf("Unexpected end of line %s", tokens[j].Value), config.ERR_JAVA_PARSING_FAILED)
