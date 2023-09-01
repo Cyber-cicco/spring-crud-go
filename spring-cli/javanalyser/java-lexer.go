@@ -1,7 +1,6 @@
 package javanalyser
 
 import (
-	"fmt"
 	"unicode"
 
 	"fr.cybercicco/springgo/spring-cli/entities/enums"
@@ -53,15 +52,18 @@ func lex(line []rune) SyntaxToken{
     }
 
     if line[position] == '/'{
-        if line[position+1] == '/'{
-            token := SyntaxToken{ Value : string(line[startPos:position]) ,position : startPos, kind : enums.WORD_KIND, }
-            return token
+        if line[position+1] == '/' {
+            for position+1 != int16(len(line)) && line[position] != '\n'{
+                position++
+            }
+            return lex(line)
         }
         if line[position+1] == '*'{
             for position+1 != int16(len(line)) && (line[position] != '*' || line[position+1] != '/'){
                 position++
             }
-            return SyntaxToken{ Value  : string(line[startPos:position]), position : startPos, kind : enums.COMMMENT_KIND, }
+            position += 2
+            return lex(line)
         }
     }
 
@@ -106,7 +108,7 @@ func lex(line []rune) SyntaxToken{
 func lexLine(newLine []rune) []SyntaxToken{
     line = newLine
     syntaxTokens := []SyntaxToken{lex(line)}
-    for syntaxTokens[len(syntaxTokens)-1].kind != enums.END_OF_LINE_KIND && syntaxTokens[len(syntaxTokens)-1].kind != enums.CLOSE_BRACKET_KIND && syntaxTokens[len(syntaxTokens)-1].kind != enums.OPEN_BRACKET_KIND {
+    for syntaxTokens[len(syntaxTokens)-1].kind != enums.END_OF_LINE_KIND && syntaxTokens[len(syntaxTokens)-1].kind != enums.CLOSE_BRACKET_KIND && syntaxTokens[len(syntaxTokens)-1].kind != enums.OPEN_BRACKET_KIND && syntaxTokens[len(syntaxTokens)-1].kind != enums.COMMENTARY_KIND && int(position) < len(newLine)-1 {
         syntaxTokens = append(syntaxTokens, lex(line))
     }
     return syntaxTokens

@@ -1,9 +1,9 @@
 package utils
 
 import (
-    "errors"
-    "strings"
-    "unicode"
+	"errors"
+	"strings"
+	"unicode"
 )
 
 func ToTitle(s string) string {
@@ -79,18 +79,22 @@ func GetClassNameAndPackageFromArgs(jpaCname string) (string, string) {
 }
 
 func ToInterfaceFileName(interfaceName string) string {
-    return strings.ToLower(ChangeStringPattern(interfaceName, "-", isUpper)) + ".ts"
+    return strings.ToLower(InsertInStringOnPattern(interfaceName, "-", isUpper)) + ".ts"
 }
 
 func isUpper(char byte) bool {
     return unicode.IsUpper(rune(char))
 }
 
-func isSlash(char byte) bool {
-    return char == '/'
+func isUrlSpecialChar(char byte) bool {
+    return char == '/' || char == '-'
 }
 
-func ChangeStringPattern(name string, appendedChars string, condition func(char byte) bool) string {
+func isUrlRemovedChar(char byte) bool {
+    return char == '/' || char == '-' || char == '{' || char == '}'
+}
+
+func InsertInStringOnPattern(name string, appendedChars string, condition func(char byte) bool) string {
     newName := ""
     positionOfLastPattern := 0
     for i := 0; i < len(name); i++ {
@@ -108,5 +112,39 @@ func ChangeStringPattern(name string, appendedChars string, condition func(char 
 }
 
 func CreateUrlVarName(methodPath string) string {
-    return strings.ReplaceAll(strings.ToUpper("URL_" +  ChangeStringPattern(methodPath, "_", isSlash)), "/", "") 
+    return strings.ToUpper("URL_" +  RemoveInStringOnPattern(InsertInStringOnPattern(methodPath, "_", isUrlSpecialChar), isUrlRemovedChar))
+}
+
+func CreateMethodNameFromUrl(url string) string {
+    newName := ""
+    positionOfLastPattern := -1
+    for i := 0; i < len(url); i++ {
+        if isUrlRemovedChar(url[i])  {
+            appendedString := url[positionOfLastPattern+1:i]
+            if appendedString != "" {
+                appendedString = ToTitle(appendedString)
+            }
+            newName += appendedString
+            positionOfLastPattern = i
+        }
+        if i == len(url)-1 {
+            newName += url[positionOfLastPattern+1:]
+        }
+    }
+    return newName
+}
+
+func RemoveInStringOnPattern(name string, condition func(char byte) bool) string {
+    newName := ""
+    positionOfLastPattern := -1
+    for i := 0; i < len(name); i++ {
+        if condition(name[i])  {
+            newName += name[positionOfLastPattern+1:i] 
+            positionOfLastPattern = i
+        }
+        if i == len(name)-1 {
+            newName += name[positionOfLastPattern+1:]
+        }
+    }
+    return newName
 }

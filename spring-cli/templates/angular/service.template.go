@@ -2,7 +2,7 @@ package angular
 
 var SERVICE_TEMPLATE = 
 `import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 {%imports%}
 
@@ -17,11 +17,11 @@ export class {%class_name%} {
 
 {%http%}
 }
-';`
+`
 
 var SERVICE_METHOD_TEMPLATE =
 `
-{%method%}{%by%}({%required_args%}){{%url_changer%}
+  {%method%}{%method_details%}({%required_args%}){{%url_changer%}
     return this.http.{%method%}<{%return_type%}>({%url_changed%}{%request_params%}{%body%})
   }
 `
@@ -31,7 +31,9 @@ var PARAMETER_TEMPLATE =
 var URL_CHANGER = 
 `
     let newURL = this.{%url%};
-    newURL = newURL.replace('{{%match%}}', {%match%});`
+    newURL = newURL.replace('{{%match%}}', {%match%}.toString());`
 
 var URL_DECLARATION = 
-`  private {%url_var%} = environement.baseUrl + "{%path%}";`
+`  private {%url_var%} = environment.baseUrl + "{%path%}";`
+var SERVICE_IMPORT_TEMPLATE = `import { {%new_import%} } from '../models/{%file_import%}'
+`

@@ -91,6 +91,9 @@ func createClass(tokens [][]SyntaxToken, i int) (Class, int) {
 func createClassBody(tokens [][]SyntaxToken, i int, class *Class) {
 	j := 0
 	for tokens[i][j].kind != enums.CLOSE_BRACKET_KIND {
+        if tokens[i][j].kind == enums.COMMENTARY_KIND {
+            i++
+        }
 		annotations := []Annotation{}
 		if tokens[i][j].kind == enums.ANNOTATION_DELIMITER_KIND {
 			annotations, j = createAnnotations(tokens[i], j)
@@ -103,10 +106,6 @@ func createClassBody(tokens [][]SyntaxToken, i int, class *Class) {
 				if k == len(tokens[l])-1 {
 					switch string(tokens[l][k].kind) {
 					case enums.END_OF_LINE_KIND:
-						if tokens[l][k-1].kind == enums.CLOSE_PARENTHESIS_KIND {
-							utils.HandleTechnicalError(fmt.Errorf("Unexpected end of line %s", tokens[i][j].Value), config.ERR_JAVA_PARSING_FAILED)
-
-						}
 						attribute := Attribute{}
 						attribute, i = createAttribute(tokens, i, j, annotations)
 						class.Attributes = append(class.Attributes, attribute)

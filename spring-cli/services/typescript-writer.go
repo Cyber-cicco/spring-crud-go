@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"strings"
 
 	"fr.cybercicco/springgo/spring-cli/config"
@@ -21,28 +20,30 @@ func createTsService(fileContent string){
     tokens := javanalyser.LexFile(&fileContent)
     javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
     serviceStruct := mapJavaService(javaFile)
+    paramsMap["{%imports%}"] = ""
     paramsMap["{%urls%}"] = createServiceUrls(&serviceStruct)
     paramsMap["{%class_name%}"] = serviceStruct.Name
     paramsMap["{%http%}"] = createHttpBody(&serviceStruct, paramsMap)
-    fmt.Printf("paramsMap: %v\n", paramsMap)
+    fileContent = utils.FormatString(paramsMap, angular.SERVICE_TEMPLATE)
+    daos.WriteSimpleFile(config.CONFIG.TsServiceFolder, utils.ToInterfaceFileName(serviceStruct.Name),[]byte(fileContent)) 
 }
 
 func createHttpBody(serviceStruct *AngularService, paramsMap map[string]string) string {
     methods := make([]string, len(serviceStruct.Http))
     for i, method := range serviceStruct.Http {
-        paramsMap["{%by%}"] = ""
         paramsMap["{%request_params%}"] = ""
         paramsMap["{%body%}"] = ""
-        paramsMap["{%url_changer%}"] = ""
-        paramsMap["{%return_type%}"] = ""
-        paramsMap["{%url_changed%}"] = ""
-        paramsMap["{%request_params%}"] = ""
+        paramsMap["{%url_changer%}"] = "" 
+        paramsMap["{%return_type%}"] = method.ReturnType 
+        paramsMap["{%url_changed%}"] = "this." + method.Url.VarName
+        paramsMap["{%request_params%}"] = "" 
         paramsMap["{%body%}"] = ""
-        paramsMap["{%method%}"] = method.HttpVerb
+        paramsMap["{%method%}"] = method.HttpVerb 
+        paramsMap["{%method_details%}"] = utils.CreateMethodNameFromUrl(method.Url.Path)
         paramsMap["{%required_args%}"] = createServiceArgs(method, paramsMap)
         methods[i] = utils.FormatString(paramsMap, angular.SERVICE_METHOD_TEMPLATE)
     }
-    return ""
+    return strings.Join(methods, "\n")
 }
 
 func createServiceArgs(method HttpMethod, paramsMap map[string]string) string {
@@ -50,12 +51,30 @@ func createServiceArgs(method HttpMethod, paramsMap map[string]string) string {
     for i, arg := range method.Args {
         paramsMap["{%type%}"] = arg.Type
         paramsMap["{%name%}"] = arg.Name
-        if arg.Scope == "PathVariable" {
-            paramsMap["{%url_changer%}"] = createUrlChanger(arg, method)
+        switch arg.Scope {
+            case "PathVariable" : {
+                paramsMap["{%url_changer%}"] = createUrlChanger(arg, method)
+                paramsMap["{%url_changed%}"] = "newURL" 
+            }
+            case "RequestBody" : {
+                paramsMap["{%body%}"] = ", " + arg.Name
+                _, ok := paramsMap[arg.Type]
+                if !ok{
+                    paramsMap[arg.Type] = arg.Type
+                    importMap := map[string]string{
+                        "{%new_import%}" : arg.Type,
+                        "{%file_import%}" : utils.RemoveSuffix(utils.ToInterfaceFileName(arg.Type), ".ts"),
+                    }
+                    paramsMap["{%imports%}"] +=  utils.FormatString(importMap, angular.SERVICE_IMPORT_TEMPLATE)
+                }
+            }
+            case "RequestParam" : {
+                paramsMap["{%request_params%}"] = "+'?" + arg.Name + "=' + " + arg.Name
+            }
         }
         args[i] = utils.FormatString(paramsMap, angular.PARAMETER_TEMPLATE)
     }
-    return ""
+    return strings.Join(args, ", ")
 }
 
 func createUrlChanger(arg Arg, method HttpMethod) string {
@@ -71,7 +90,7 @@ func createServiceUrls(serviceStruct *AngularService) string {
     for i, url := range serviceStruct.Urls {
         paramsMap := map[string]string{
             "{%url_var%}" : url.VarName,
-            "{%path%}" : url.Path,
+            "{%path%}" : url.AbsolutePath,
         }
         urls[i] = utils.FormatString(paramsMap, angular.URL_DECLARATION)
     }

@@ -92,7 +92,7 @@ func GetClassPath(javaFile JavaInterpreted) string {
     return classPath
 }
 
-func GetMethodPath(method Method, classPath string) string{
+func GetMethodPath(method Method) string{
     methodPath := ""
     for _, annotation := range method.Annotations {
         if slices.Contains(CONTROLLER_ANNOATIONS, annotation.Name.Name.Value) {
@@ -103,7 +103,7 @@ func GetMethodPath(method Method, classPath string) string{
             }
         }
     }
-    return classPath + methodPath
+    return methodPath
 }
 
 func FindHttpVerb(method Method) string {
