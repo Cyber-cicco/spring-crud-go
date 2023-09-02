@@ -62,6 +62,7 @@ func main() {
 func jpaExecute(jpaCmd *flag.FlagSet) {
 	jpaCname := jpaCmd.String("c", "", "Name of the jpa class")
 	jpaFieldsString := jpaCmd.String("f", "", "Fields of the class")
+	*jpaFieldsString = strings.Trim(*jpaFieldsString, " ")
 	jpaClear := jpaCmd.Bool("clear", false, "Allows you to clear all jpa config files")
 	jpaCmd.Parse(os.Args[2:])
 	jpaFields := strings.Split(*jpaFieldsString, " ")
@@ -110,6 +111,5 @@ func configExecute(configCmd *flag.FlagSet) {
 
 func angularExecute() {
 	services.WriteAngularInterfaceFile()
-    services.WriteAngularServiceFile()
+	services.WriteAngularServiceFile()
 }
-

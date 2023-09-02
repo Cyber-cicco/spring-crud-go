@@ -1,0 +1,29 @@
+{
+    "name": "Foo",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "bar",
+            "type": "Bar",
+            "options": {
+                "Annotations": [
+                    "@ManyToOne\n    @JoinColumn(name = \"foo_id\")\n    "
+                ]
+            }
+        },
+        {
+            "name": "nbPoint",
+            "type": "Integer",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "dateCreation",
+            "type": "LocalDate",
+            "options": {
+                "Annotations": []
+            }
+        }
+    ]
+}

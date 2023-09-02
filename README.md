@@ -75,7 +75,320 @@ Sinon, on peut choisir l'option "base", qui permet de d'ignorer le package suppl
 
 ### Générer une classe simple
 
+```bash
+./cmd class -c Foo
+```
 
+Permet de générer une classe simple :
+
+```java
+package com.example.springgo;
+
+
+public class Foo {
+
+}
+```
+Celle-ci sera placée dans le package précisée dans [spring-parameters.json](spring-parameters.json)
+
+On peut également générer une classe de cette façon : 
+
+```bash
+./cmd class -c bar.Foo
+```
+Ainsi, la classe sera placée dans le package bar, ajouté au package de base précisé dans le fichier de configuration.
+
+#### Astuce :
+
+Il est possible de changer le paramètre "package" de "default-package" dans 
+[spring-parameters.json](spring-parameters.json) pour ne pas avoir à repréciser
+le package à chaque création de classe si vous travailler tout le temps 
+dans le même package
+
+#### Options possibles :
+
+L'option -t permet de préciser un type de classe particulier, de cette façon :
+
+```bash
+./cmd class -c Foo -t ctrl
+```
+```java
+package com.example.springgo.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;    
+
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/foo")
+public class FooController {
+
+}
+```
+```bash
+./cmd class -c Foo -t srv
+```
+```java
+package com.example.springgo.service;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class FooService {
+
+}
+
+```
+```bash
+./cmd class -c Foo -t ent
+```
+```java
+package com.example.springgo.entites;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Builder;
+import lombok.NoArgsConstructor;    
+
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Entity
+@Builder
+public class Foo {
+
+}
+```
+```bash
+./cmd class -c Foo -t map
+```
+```java
+package com.example.springgo.dto;
+
+
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class FooTransformer {
+
+}
+```
+```bash
+./cmd class -c Foo -t dto
+```
+```java
+package com.example.springgo.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+public class FooDto {
+
+}
+```
+```bash
+./cmd class -c Foo -t repo
+```
+```java
+package com.example.springgo.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+
+public interface FooRepository extends JpaRepository<Foo, Long>  {
+
+}
+
+```
+```bash
+./cmd class -c Foo -t ex
+```
+```java
+package com.example.springgo.exception;
+
+
+public class FooException extends RuntimeException {
+
+}
+
+```
+```bash
+./cmd class -c Foo -t enum
+```
+```java
+package com.example.springgo;
+
+
+public enum Foo {
+
+}
+```
+```bash
+./cmd class -c Foo -t int
+```
+```java
+package com.example.springgo;
+
+
+public interface Foo {
+
+}
+```
+```bash
+./cmd class -c Foo -t rec
+```
+```java
+package com.example.springgo;
+
+
+public record Foo() {
+
+}
+
+```
+```bash
+./cmd class -c Foo -t ano
+```
+```java
+package com.example.springgo;
+
+
+public @interface Foo {
+
+}
+```
+
+### Générer des classes de CRUD pour de nouvelles entités :
+
+Cela se fait en deux étapes
+
+#### 1 Générer les fichiers de configuration des entités JPA
+
+```bash
+./cmd jpa -c Foo -f "bar nbBuzz dateBro"
+```
+```json
+{
+    "name": "Foo",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "bar",
+            "type": "String",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "nbBuzz",
+            "type": "Integer",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "dateBro",
+            "type": "LocalDate",
+            "options": {
+                "Annotations": []
+            }
+        }
+    ]
+}
+```
+
+L'utilisation basique de cette option de ligne de commande permet de préciser le nom de la classe avec l'option -c, et les noms des fields avec l'option -f. Par défaut, l'application va essayer d'inférer le type du champ à partir de son nom.
+Il est possible d'observer les règles de l'inférence de type dans [ce fichier](./spring-cli/utils/type-inferer.go)
+
+Cependant, si ce genre de comportement ne convient pas, il est possible de typer à la main le field en utilisant la syntaxe suivante :
+
+\<nom_field>:<type_field>
+
+Exemple : 
+```
+ ./cmd jpa -c Foo -f "bar nbBuzz:Long dateBro"
+```
+Ici, nbBuzz sera de type Long
+
+On peut également préciser certaines annotations en utilisant la syntaxe suivante:
+
+\<field>@\<annotation>
+
+il existe différentes annotations possibles:
+
+@mtm : Many to Many
+
+@mto : Many to One
+
+@otm : One to Many
+
+Il est possible d'aller vérifier la logique de création d'annotation dans [ce fichier](./spring-cli/services/java-classes/shared.go), et également d'en rajouter d'autres si vous le souhaitez
+
+Enfin, dernière option, il est possible de préciser que le nom du champ doit prendre le type du nom du champ en mettant sa première lettre en majuscule. Si cela peut paraitre très spécifique, cela permet en fait de préciser que le champ est une entité. Par exemple:
+
+```bash
+ ./cmd jpa -c Foo -f "*bar nbBuzz dateBro "
+```
+```json
+{
+    "name": "Foo",
+    "package": "com.example.springgo",
+    "fields": [
+        {
+            "name": "bar",
+            "type": "Bar",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "nbBuzz",
+            "type": "Integer",
+            "options": {
+                "Annotations": []
+            }
+        },
+        {
+            "name": "dateBro",
+            "type": "LocalDate",
+            "options": {
+                "Annotations": []
+            }
+        }
+    ]
+}
+```
+
+#### 2 Générer le projet
+
+```
+ ./cmd project
+```
+
+Cette commande va générer le projet à partir des fichiers de configuration des entités JPA.
+P ces deux commandes :
+
+```bash
+./cmd jpa -c Foo -f "*bar@mto nbPoint dateCreation"
+./cmd jpa -c Bar -f "*foo@otm titre dateEcheance"
+```
+
+![projet généré](./img/project.png)
 
  ## Ce que ce projet est / veut être
 
