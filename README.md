@@ -58,7 +58,7 @@ La configuration par défaut se trouve dans spring-parameters.json.
 Il contient les paramètres suivants:
 *  base-package : le package de base du projet, qui préfixe tous les autres
 
-* erease-files : détermine si, lorsque l'on souhaite créer un fichier dont le nom existe déjà, il est écrasé ou non
+* erease-files : détermine si, lorsque l'on souhaite créer un fichier dont le nom existe déjà, il est écrasé ou non **IL EST FORTEMENT CONSEILLÉ DE LE GARDER À FALSE**. En effet la commande ./cmd project pourrait rééinitialiser des classes entières si vous avez oublié de faire le ménage dans vos fichiers du dossier JPA en voulant générer de nouvelles classes (plus de précision là dessus dans la partie "génération de projet")
 
 * ts-interface-folder : dossier dans lequel se trouveront stockés les interfaces typescript. Il est conseillé de le configurer vers un projet Angular (ou typescript d'une manière générale)
 
@@ -109,6 +109,7 @@ dans le même package
 
 L'option -t permet de préciser un type de classe particulier, de cette façon :
 
+Générer un controller :
 ```bash
 ./cmd class -c Foo -t ctrl
 ```
@@ -127,6 +128,7 @@ public class FooController {
 
 }
 ```
+Générer un service :
 ```bash
 ./cmd class -c Foo -t srv
 ```
@@ -142,6 +144,7 @@ public class FooService {
 }
 
 ```
+Générer une entité :
 ```bash
 ./cmd class -c Foo -t ent
 ```
@@ -164,6 +167,7 @@ public class Foo {
 
 }
 ```
+Générer un mapper :
 ```bash
 ./cmd class -c Foo -t map
 ```
@@ -179,6 +183,7 @@ public class FooTransformer {
 
 }
 ```
+Générer un Dto :
 ```bash
 ./cmd class -c Foo -t dto
 ```
@@ -199,6 +204,7 @@ public class FooDto {
 
 }
 ```
+Générer un Repo :
 ```bash
 ./cmd class -c Foo -t repo
 ```
@@ -215,6 +221,7 @@ public interface FooRepository extends JpaRepository<Foo, Long>  {
 }
 
 ```
+Générer une Exception :
 ```bash
 ./cmd class -c Foo -t ex
 ```
@@ -227,6 +234,7 @@ public class FooException extends RuntimeException {
 }
 
 ```
+Générer un Enum :
 ```bash
 ./cmd class -c Foo -t enum
 ```
@@ -238,6 +246,7 @@ public enum Foo {
 
 }
 ```
+Générer une interface :
 ```bash
 ./cmd class -c Foo -t int
 ```
@@ -249,6 +258,7 @@ public interface Foo {
 
 }
 ```
+Générer un record :
 ```bash
 ./cmd class -c Foo -t rec
 ```
@@ -261,6 +271,7 @@ public record Foo() {
 }
 
 ```
+Générer une annotation :
 ```bash
 ./cmd class -c Foo -t ano
 ```
@@ -344,6 +355,7 @@ Enfin, dernière option, il est possible de préciser que le nom du champ doit p
 ```bash
  ./cmd jpa -c Foo -f "*bar nbBuzz dateBro "
 ```
+va générer :
 ```json
 {
     "name": "Foo",
@@ -374,6 +386,8 @@ Enfin, dernière option, il est possible de préciser que le nom du champ doit p
 }
 ```
 
+Ce fichier de configuration se trouvera dans le dossier springCli/jpa/
+
 #### 2 Générer le projet
 
 ```
@@ -389,6 +403,130 @@ P ces deux commandes :
 ```
 
 ![projet généré](./img/project.png)
+
+#### Supprimer ses d'entités JPA
+
+Pour supprimer les fichiers de configuration de entités JPA et ne donc par régénérer les classes chaque fois, lancez la commande suivante : 
+
+```bash
+./cmd jpa -clear
+```
+
+### Générer des interfaces et des services le module HTTP de Angular
+
+La commande est extrêmement simple :
+
+```bash
+./cmd ng
+```
+Cela va générer, dans le dossier précisé dans spring-parameters.json, les interfaces et les services correspondants aux controllers et Dtos du back.
+
+Par exemple, pour le projet créé précédement, nous pouvons obtenir les résultats suivants:
+
+interface de Foo :
+```typescript
+import { Foo } from './foo'
+
+export interface Bar {
+  id: number;
+  foo: Foo;
+  titre: string;
+  dateEcheance: Date;
+
+}
+```
+interface de Bar :
+```typescript
+import { Bar } from './bar'
+
+export interface Foo {
+  id: number;
+  bar: Bar;
+  nbPoint: number;
+  dateCreation: Date;
+
+}
+```
+Service d'appel au controller de Bar :
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Bar } from '../models/bar'
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BarHttpService {
+
+  private URL_ = environment.baseUrl + "/bar";
+
+  constructor(private http:HttpClient) {}
+
+
+  get(){
+    return this.http.get<Bar[]>(this.URL_)
+  }
+
+
+  post(dto : Bar){
+    return this.http.post<Bar>(this.URL_, dto)
+  }
+
+
+  put(dto : Bar){
+    return this.http.put<Bar>(this.URL_, dto)
+  }
+
+
+  delete(dto : Bar){
+    return this.http.delete<Bar>(this.URL_, dto)
+  }
+
+}
+```
+Service d'appel au controller de Foo :
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Foo } from '../models/foo'
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FooHttpService {
+
+  private URL_ = environment.baseUrl + "/foo";
+
+  constructor(private http:HttpClient) {}
+
+
+  get(){
+    return this.http.get<Foo[]>(this.URL_)
+  }
+
+
+  post(dto : Foo){
+    return this.http.post<Foo>(this.URL_, dto)
+  }
+
+
+  put(dto : Foo){
+    return this.http.put<Foo>(this.URL_, dto)
+  }
+
+
+  delete(dto : Foo){
+    return this.http.delete<Foo>(this.URL_, dto)
+  }
+
+}
+
+```
+
 
  ## Ce que ce projet est / veut être
 
