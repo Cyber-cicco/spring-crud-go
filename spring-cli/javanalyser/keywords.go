@@ -79,6 +79,7 @@ var CLASS_IDENTIFIER_KEYWORDS = []string{
 
 var METHOD_IDENTIFIER_KEYWORDS = []string{
     "public",
+    "default",
     "private",
     "protected",
     "abstract",

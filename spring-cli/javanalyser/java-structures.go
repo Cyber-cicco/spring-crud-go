@@ -9,6 +9,7 @@ type JavaInterpreted struct {
 type Method struct {
 	Final       bool
 	Static      bool
+    Default     bool
 	Abstract    bool
 	Visibility  Keyword
 	Annotations []Annotation

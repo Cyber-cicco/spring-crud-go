@@ -1,6 +1,7 @@
 package daos
 
 import (
+	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -32,6 +33,7 @@ func parseFolders(files []fs.FileInfo, path, suffix string, executable angularFu
         } else if hasSuffix(file, suffix) {
             content, err := os.ReadFile(path+"/"+file.Name())
             utils.HandleTechnicalError(err, config.ERR_CURRENT_DIR_OPEN)
+            fmt.Printf("file.Name(): %v\n", file.Name())
             executable(string(content))
         }
     }

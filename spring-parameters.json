@@ -1,6 +1,6 @@
 {
     "base-package": "com.example.springgo",
-    "erease-files": true,
+    "erease-files": false,
     "ts-interface-folder": "/home/hijokaidan/PC/spring-go/models/",
     "ts-service-folder" :  "/home/hijokaidan/PC/spring-go/providers/",
     "entity-package": {
@@ -24,9 +24,9 @@
         "suffix": "Service"
     },
     "repository-package": {
-        "package": "repository",
+        "package": "daos",
         "package-policy": "appended",
-        "suffix": "Repository"
+        "suffix": "Daos"
     },
     "controller-package": {
         "package": "controller",

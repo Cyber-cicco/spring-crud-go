@@ -8,12 +8,13 @@ import (
 
 
 type SyntaxToken struct {
-    Value string
-    position int16
+    Value string 
+    Values []SyntaxToken
+    position int
     kind string
 }
 
-var position int16
+var position int
 var line []rune
 
 func next() string{
@@ -25,9 +26,9 @@ func next() string{
 
 func lex(line []rune) SyntaxToken{
     startPos := position
-    if unicode.IsLetter(line[position]) {
+    if unicode.IsLetter(line[position]) || line[position] == '_' {
         position++
-        for unicode.IsLetter(line[position]) || unicode.IsDigit(line[position]){
+        for unicode.IsLetter(line[position]) || unicode.IsDigit(line[position]) || line[position] == '_' {
             position++
         }
         token := SyntaxToken{ Value : string(line[startPos:position]) ,position : startPos, kind : enums.WORD_KIND, }
@@ -41,25 +42,40 @@ func lex(line []rune) SyntaxToken{
         token := SyntaxToken{ Value : string(line[startPos:position]) ,position : startPos, kind : enums.NUMBER_KIND, }
         return token
     }
-    if line[position] == '"' && position != 0 && line[position-1] != '\\' {
+    if line[position] == '"'  {
         position++
         for line[position] != '"' {
+            if line[position] == '\\' {
+                position++
+            }
             position++
         }
         token := SyntaxToken{ Value : string(line[startPos + 1 :position]) ,position : startPos, kind : enums.STRING_KIND, }
         position++
         return token
     }
+    if line[position] == '\'' && position != 0 && line[position-1] != '\\' {
+        position++
+        for line[position] != '\'' {
+            if line[position] == '\\' {
+                position++
+            }
+            position++
+        }
+        token := SyntaxToken{ Value : string(line[startPos + 1 :position]) ,position : startPos, kind : enums.CHARACTER_KIND }
+        position++
+        return token
+    }
 
     if line[position] == '/'{
         if line[position+1] == '/' {
-            for position+1 != int16(len(line)) && line[position] != '\n'{
+            for position+1 != len(line) && line[position] != '\n'{
                 position++
             }
             return lex(line)
         }
         if line[position+1] == '*'{
-            for position+1 != int16(len(line)) && (line[position] != '*' || line[position+1] != '/'){
+            for position+1 != len(line) && (line[position] != '*' || line[position+1] != '/'){
                 position++
             }
             position += 2
@@ -71,11 +87,27 @@ func lex(line []rune) SyntaxToken{
     case ' ':
         position++
         return lex(line)
+    case 9:
+        position++
+        return lex(line)
     case '\n':
+        if position + 1 == len(line) {
+            return SyntaxToken{ Value  : next(), position : startPos, kind : enums.END_OF_LINE_KIND, }
+        }
+        position++
+        return lex(line)
+    case '\r':
+        if position + 1 == len(line) {
+            return SyntaxToken{ Value  : next(), position : startPos, kind : enums.END_OF_LINE_KIND, }
+        }
         position++
         return lex(line)
     case '@':
         return SyntaxToken{ Value  : next(), position : startPos, kind : enums.ANNOTATION_DELIMITER_KIND, }
+    case '[':
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.OPEN_ARRAY_KIND, }
+    case ']':
+        return SyntaxToken{ Value  : next(), position : startPos, kind : enums.CLOSE_ARRAY_KIND, }
     case '(':
         return SyntaxToken{ Value  : next(), position : startPos, kind : enums.OPEN_PARENTHESIS_KIND, }
     case ')':
@@ -101,9 +133,9 @@ func lex(line []rune) SyntaxToken{
     default:
         return SyntaxToken{ Value  : next(), position : startPos, kind : enums.BAD_TOKEN, }
     }
-
-
 }
+
+
 
 func lexLine(newLine []rune) []SyntaxToken{
     line = newLine
@@ -117,7 +149,7 @@ func lexLine(newLine []rune) []SyntaxToken{
 func LexFile(lines *string) [][]SyntaxToken{
     position = 0
     tokens := [][]SyntaxToken{}
-    for position < int16(len([]rune(*lines))-1){
+    for position < len([]rune(*lines))-1 {
         tokens = append(tokens, lexLine([]rune(*lines)))
     }
     return tokens

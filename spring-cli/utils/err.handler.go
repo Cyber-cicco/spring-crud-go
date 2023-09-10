@@ -26,6 +26,6 @@ func HandleUsageError(err error, message string){
 func Warning(err error, message string){
     if(err != nil){
         fmt.Println(message)
-        fmt.Println(config.USAGE_MESSAGE)
+        fmt.Println(err)
     }
 }
