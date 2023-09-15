@@ -2,6 +2,7 @@ package daos
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -12,8 +13,8 @@ import (
 )
 
 func writeFile(bytes []byte, filename string) {
-	err := fileExists(filename)
-	if err == nil {
+	if fileExists(filename) {
+        fmt.Printf("filename: %v\n", filename)
 		overrideFile(bytes, filename)
 	} else {
 		createNewFile(bytes, filename)
@@ -41,15 +42,14 @@ func overrideFile(bytes []byte, filename string) {
 	}
 }
 
-func fileExists(dirPath string) error {
+func fileExists(dirPath string) bool {
 	_, err := os.Stat(dirPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return err
+			return false
 		}
-		return err
 	}
-	return nil
+	return true
 }
 
 func WriteEntityJson(entity entities.JpaEntity) {
@@ -57,7 +57,7 @@ func WriteEntityJson(entity entities.JpaEntity) {
 }
 
 func WriteSimpleFile(directory, filename string, content []byte) {
-	if fileExists(directory) != nil {
+	if !fileExists(directory) {
 		utils.HandleTechnicalError(os.MkdirAll(directory, 0777), config.ERR_DIR_CREATION)
 	}
 	writeFile(content, directory+filename)
@@ -66,7 +66,10 @@ func WriteSimpleFile(directory, filename string, content []byte) {
 func WriteBaseConfigFile(baseConfig config.Config) {
 	confBytes, err := json.MarshalIndent(baseConfig, "", "    ")
 	utils.HandleTechnicalError(err, config.ERR_MARSHARL)
-	overrideFile(confBytes, "../../spring-parameters.json")
+    if !fileExists("./src/main/java/"){
+        utils.HandleUsageError(errors.New("io error"), config.ERR_NO_JAVA)
+    }
+	writeFile(confBytes, "./spring-parameters.json")
 }
 
 /*

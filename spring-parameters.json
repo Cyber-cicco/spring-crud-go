@@ -1,10 +1,8 @@
 {
-    "base-package": "com.example.springgo",
+    "base-package": "",
     "erease-files": false,
-    "ts-interface-folder": "/home/hijokaidan/PC/spring-go/models/",
-    "ts-service-folder" :  "/home/hijokaidan/PC/spring-go/providers/",
     "entity-package": {
-        "package": "entites",
+        "package": "entities",
         "package-policy": "base",
         "suffix": ""
     },
@@ -19,14 +17,14 @@
         "suffix": "Transformer"
     },
     "service-package": {
-        "package": "service",
+        "package": "services",
         "package-policy": "appended",
         "suffix": "Service"
     },
     "repository-package": {
-        "package": "daos",
+        "package": "repository",
         "package-policy": "appended",
-        "suffix": "Daos"
+        "suffix": "Repository"
     },
     "controller-package": {
         "package": "controller",
@@ -34,13 +32,15 @@
         "suffix": "Controller"
     },
     "exception-package": {
-        "package": "exception",
-        "package-policy": "base",
-        "suffix": "Exception"
+        "package": "",
+        "package-policy": "",
+        "suffix": ""
     },
     "default-package": {
         "package": "",
-        "package-policy": "base",
+        "package-policy": "",
         "suffix": ""
-    }
+    },
+    "ts-interface-folder": "",
+    "ts-service-folder": ""
 }

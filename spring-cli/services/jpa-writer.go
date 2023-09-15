@@ -17,8 +17,8 @@ func CreateJpaEntity(jpaCname *string, jpaFields []string){
     jpaEntity.Fields = []entities.JpaField{}
     hydrateEntityFields(&jpaEntity, jpaFields, cname)
     jpaEntity.FileBytes = daos.Jsonify(jpaEntity)
-    jpaEntity.FileName = config.CONFIG.JpaJsonFilePath + cname + ".json"
-    daos.WriteEntityJson(jpaEntity)
+    jpaEntity.FileName =  cname + ".json"
+    daos.WriteSimpleFile(config.CONFIG.JpaJsonFilePath, jpaEntity.FileName, jpaEntity.FileBytes)
 }
 
 func DeleteJpaFiles(){

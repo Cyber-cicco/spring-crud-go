@@ -14,13 +14,16 @@ import (
 
 
 func LoadConfig() {
-    file := filepath.Join(config.RELATIVE_PATH, "spring-parameters.json")
+    file := filepath.Join("spring-parameters.json")
     data, fileErr := ioutil.ReadFile(file)
-    utils.HandleTechnicalError(fileErr, config.ERR_OPEN_CONFIG)
+    utils.HandleUsageError(fileErr, config.ERR_OPEN_CONFIG)
     utils.HandleTechnicalError(json.Unmarshal(data, &config.CONFIG), config.ERR_UNMARSHAL)
-    config.CONFIG.BaseJavaDir = config.RELATIVE_PATH + config.JAVA_PATH 
-    config.CONFIG.JpaJsonFilePath =  "../jpa/"
-    utils.HandleTechnicalError(fileExists(config.CONFIG.BaseJavaDir + strings.ReplaceAll(config.CONFIG.BasePackage, ".", "/") + "/"), config.ERR_BAD_CONFIG_PACKAGE)
+    config.CONFIG.BaseJavaDir = config.JAVA_PATH 
+    config.CONFIG.JpaJsonFilePath =  "./jpa/"
+    exists := fileExists(config.CONFIG.BaseJavaDir + strings.ReplaceAll(config.CONFIG.BasePackage, ".", "/") + "/")
+    if !exists {
+        utils.HandleUsageError(errors.New("config error"), config.ERR_BAD_CONFIG_PACKAGE)
+    }
 }
 
 
