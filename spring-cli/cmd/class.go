@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"os"
-	"strings"
 
 	"fr.cybercicco/springgo/spring-cli/daos"
 	"fr.cybercicco/springgo/spring-cli/services"
@@ -14,19 +12,15 @@ var cname string
 
 var classCmd = &cobra.Command{
 	Use:   "cl",
-	Short: "Générer des classes Typescript",
+	Short: "Générer des classes Java",
 	Long: `
-  Permet de générer une classe Typescript
+  Permet de générer une classe Java et de préciser son type.
+  Peut être une classe simple, une annotation, une interface, un enum, un record ou un repository, un mapper, un service, un controller un DTO.
   `,
 
 	Run: func(cmd *cobra.Command, args []string) {
         daos.LoadConfig()
-        if deleteFiles {
-            services.DeleteJpaFiles()
-            os.Exit(1)
-        }
-        jpaFields := strings.Split(fields, " ")
-		services.CreateJpaEntity(&class, jpaFields)
+		services.CreateJavaClass(cname, classType)
     },
 }
 

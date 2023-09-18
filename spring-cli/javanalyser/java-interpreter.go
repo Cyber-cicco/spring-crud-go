@@ -26,7 +26,6 @@ func OrganizeTokensByMeaning(tokens [][]SyntaxToken) JavaInterpreted {
 }
 
 func createClass(tokens [][]SyntaxToken, i int) (Class, int) {
-    fmt.Println("in create Class")
 	class := Class{}
 	annotations := []Annotation{}
 	j := 0
@@ -90,28 +89,23 @@ func createClass(tokens [][]SyntaxToken, i int) (Class, int) {
 	}
     i++
     i = createClassBody(tokens, i, &class)
-    fmt.Println("after class body")
 	return class, i
 }
 
 func createClassBody(tokens [][]SyntaxToken, i int, class *Class) int {
-    fmt.Println("in create ClassBody")
 	j := 0
 	for tokens[i][j].kind != enums.CLOSE_BRACKET_KIND {
 		if tokens[i][j].kind == enums.COMMENTARY_KIND {
 			i++
 		}
-        fmt.Printf("tokens[i][j]: %v\n", tokens[i][j])
 		annotations := []Annotation{}
 		if tokens[i][j].kind == enums.ANNOTATION_DELIMITER_KIND {
 			annotations, i, j = createAnnotations(tokens, i, j, class)
-            fmt.Println("after create annotations")
 		}
 		if slices.Contains(METHOD_IDENTIFIER_KEYWORDS, string(tokens[i][j].Value)) {
 			k := j
 			l := i
 			for tokens[l][k].kind != enums.END_OF_LINE_KIND && tokens[l][k].kind != enums.OPEN_BRACKET_KIND {
-                fmt.Println("looooop")
 				k++
                 if tokens[l][k].Value == "class" {
                     newClass := Class{}
@@ -131,7 +125,6 @@ func createClassBody(tokens [][]SyntaxToken, i int, class *Class) int {
 					case enums.OPEN_BRACKET_KIND:
 						method := Method{}
 						method, i = createMethod(tokens, i, j, annotations, class)
-                        fmt.Println("after create method")
 						class.Methods = append(class.Methods, method)
 						j = 0
 						break
@@ -148,7 +141,6 @@ func createClassBody(tokens [][]SyntaxToken, i int, class *Class) int {
 }
 
 func createMethod(tokens [][]SyntaxToken, i, j int, annotations []Annotation, class *Class) (Method, int) {
-    fmt.Println("in create method")
 	method := Method{}
 	method.Annotations = annotations
     if string(tokens[i][j].Value) == "default" {
@@ -208,7 +200,6 @@ func createMethod(tokens [][]SyntaxToken, i, j int, annotations []Annotation, cl
 
 func createBloc(tokens [][]SyntaxToken, i int) (Bloc, int) {
 	bloc := Bloc{}
-    fmt.Println("in create bloc")
     nbOpenBracket := 1
     nbCloseBracket := 0
 	j := 0
@@ -298,17 +289,14 @@ func createJavaType(tokens []SyntaxToken, j int) (JavaType, int) {
 }
 
 func createAnnotations(tokens [][]SyntaxToken, i, j int, class *Class) ([]Annotation, int, int) {
-    fmt.Println("in create Annotations")
 	if len(tokens[i]) < 2 {
 		utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][0].Value), config.ERR_JAVA_PARSING_FAILED)
 	}
 	annotations := []Annotation{}
 	for tokens[i][j].kind == enums.ANNOTATION_DELIMITER_KIND {
-        fmt.Printf("tokens[i][j]: %v\n", tokens[i][j])
 		j++
 		annotation := Annotation{}
 		annotation.Name = createName(tokens[i][j])
-        fmt.Println(annotation)
 		j++
 		if tokens[i][j].kind == enums.OPEN_PARENTHESIS_KIND {
 			annotation.Variables, i, j = createAnnotationVariable(tokens, i, j, class, annotation)
@@ -316,7 +304,6 @@ func createAnnotations(tokens [][]SyntaxToken, i, j int, class *Class) ([]Annota
 		}
 		annotations = append(annotations, annotation)
 	}
-    fmt.Println("returning annotation")
 	return annotations, i, j
 }
 
@@ -361,7 +348,6 @@ func createAnnotationVariable(tokens [][]SyntaxToken,i, j int, class *Class, ann
 
         if tokens[i][j].kind == enums.OPEN_BRACKET_KIND {
             i, j = handleAnnotationArray(i, tokens, &variable)
-            fmt.Printf("tokens[i][j]: %v\n", tokens[i][j])
         }
 
 		if tokens[i][j].kind == enums.STRING_KIND {

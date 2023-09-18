@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"strings"
 
 	"fr.cybercicco/springgo/spring-cli/config"
@@ -17,10 +16,8 @@ func WriteAngularServiceFile(){
 }
 
 func createTsService(fileContent string){
-    fmt.Printf("len(fileContent): %v\n", len(fileContent))
     paramsMap := map[string]string{}
     tokens := javanalyser.LexFile(&fileContent)
-    fmt.Printf("len(tokens): %v\n", len(tokens))
     javaFile := javanalyser.OrganizeTokensByMeaning(tokens)
     serviceStruct := mapJavaService(javaFile)
     paramsMap["{%imports%}"] = ""

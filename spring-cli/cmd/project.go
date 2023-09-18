@@ -18,10 +18,7 @@ des fichiers de configuration du dossier jpa à la racine du projet
 
 	Run: func(cmd *cobra.Command, args []string) {
         daos.LoadConfig()
-		services.CreateBaseProject(&_package)
+		services.CreateJavaClasses()
     },
 }
 
-func init() {
-    projectCmd.Flags().StringVarP(&packageProject, "package", "p", "", "Nom du package de base du projet")
-}

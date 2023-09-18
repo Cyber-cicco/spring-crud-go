@@ -1,6 +1,7 @@
 package javaclasses
 
 import (
+
 	"fr.cybercicco/springgo/spring-cli/entities"
 	"fr.cybercicco/springgo/spring-cli/templates/java"
 	"fr.cybercicco/springgo/spring-cli/utils"

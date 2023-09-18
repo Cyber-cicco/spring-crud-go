@@ -14,7 +14,6 @@ import (
 
 func writeFile(bytes []byte, filename string) {
 	if fileExists(filename) {
-        fmt.Printf("filename: %v\n", filename)
 		overrideFile(bytes, filename)
 	} else {
 		createNewFile(bytes, filename)
@@ -61,6 +60,22 @@ func WriteSimpleFile(directory, filename string, content []byte) {
 		utils.HandleTechnicalError(os.MkdirAll(directory, 0777), config.ERR_DIR_CREATION)
 	}
 	writeFile(content, directory+filename)
+}
+
+func WriteTemplateFile(javaClass entities.BaseJavaClass, directory string){
+    directory = "templates/java/" + directory
+    WriteSimpleFile(directory, "Packages.txt", []byte(javaClass.Packages))
+    WriteSimpleFile(directory,"Imports.txt", []byte(javaClass.Imports ))
+    WriteSimpleFile(directory,"Annotations.txt", []byte(javaClass.Annotations))
+    WriteSimpleFile(directory,"ClassName.txt", []byte(javaClass.ClassName))
+    WriteSimpleFile(directory,"ClassType.txt", []byte(javaClass.ClassType))
+    WriteSimpleFile(directory,"ClassSuffix.txt", []byte(javaClass.ClassSuffix))
+    WriteSimpleFile(directory,"Extends.txt", []byte(javaClass.Extends))
+    WriteSimpleFile(directory,"Implements.txt", []byte(javaClass.Implements))
+    WriteSimpleFile(directory,"Body.txt", []byte(javaClass.Body))
+    WriteSimpleFile(directory,"SpecialImports.txt", []byte(javaClass.SpecialImports))
+    WriteSimpleFile(directory,"FileName.txt", []byte(javaClass.FileName))
+    WriteSimpleFile(directory,"Directory.txt", []byte(javaClass.Directory))
 }
 
 func WriteBaseConfigFile(baseConfig config.Config) {

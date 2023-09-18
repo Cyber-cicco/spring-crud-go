@@ -20,3 +20,4 @@ var ERR_SRC_FOLDER_NOT_IN_ROOT = "Le dossier src dans lequel se trouve tous les 
 var ERR_JAVA_PARSING_FAILED = "Erreur dans le parsing d'un fichier java"
 var ERR_JAVA_ANALYSING =  "Erreur dans l'analyse d'un fichier java: une méthode de controller semble ne pas avoir été annotée de façon à permettre de repérer"
 var ERR_NO_JAVA =  "Il semblerait que vous essayez d'initialiser spring-go dans un dossier ne contenant pas de projet Java.\nAssurez-vous de l'existence du dossier './src/main/java/' dans votre répertoire et essayez à nouveau"
+var ERR_TEMPLATE_FILE_READ = "Erreur dans la lecture d'un fichier de template"
