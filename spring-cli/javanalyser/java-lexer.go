@@ -7,6 +7,9 @@ import (
 )
 
 
+/*
+* Structure of a java Token
+*/
 type SyntaxToken struct {
     Value string 
     Values []SyntaxToken
@@ -24,6 +27,20 @@ func next() string{
 
 }
 
+/* lex 
+*  performs lexical analysis on a line of text and generates a SyntaxToken.
+*
+*  Returns:
+*    - (SyntaxToken): A SyntaxToken containing information about the token found.
+*
+*  The function scans the input line of text character by character, identifying and classifying tokens.
+*  It recognizes WORD_KIND, NUMBER_KIND, STRING_KIND, CHARACTER_KIND, and various punctuation tokens.
+*  The position variable is used to keep track of the current position in the line of text.
+*  The function makes use of recursive calls and conditional checks to process the characters when they need to be ignored.
+*
+*  @param line ([]rune): A slice of runes representing the line of text to be analyzed.
+*  @return (SyntaxToken): A SyntaxToken containing information about the token found.
+*/
 func lex(line []rune) SyntaxToken{
     startPos := position
     if unicode.IsLetter(line[position]) || line[position] == '_' {

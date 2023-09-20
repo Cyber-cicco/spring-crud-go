@@ -9,6 +9,22 @@ import (
 	"fr.cybercicco/springgo/spring-cli/utils"
 )
 
+/*
+* createJavaFileBytes generates the byte representation of a Java class based on the provided BaseJavaClass object.
+*
+* This function takes one parameter:
+*   - 'javaClass' (entities.BaseJavaClass): A BaseJavaClass object representing the Java class.
+*
+* It returns a slice of bytes containing the byte representation of the Java class.
+*
+* The function performs the following tasks:
+*   - Initializes a paramsMap with placeholders and their corresponding values based on 'javaClass' properties.
+*   - Formats and retrieves the Java class template using the provided paramsMap.
+*   - Converts the formatted Java class template into a slice of bytes and returns it.
+*
+* @param javaClass (entities.BaseJavaClass): A BaseJavaClass object representing the Java class.
+* @return ([]byte): A slice of bytes containing the byte representation of the Java class.
+*/
 func createJavaFileBytes(javaClass entities.BaseJavaClass) []byte{
     paramsMap := map[string]string {
         "{%package%}" : javaClass.Packages,
@@ -29,7 +45,6 @@ func writeClassesForOneEntity(classes []entities.BaseJavaClass){
         daos.WriteSimpleFile(class.Directory, class.FileName, createJavaFileBytes(class))        
     }
 }
-
 
 func CreateJavaClasses(){
     classes := daos.LoadEntityJson();

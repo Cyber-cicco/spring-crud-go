@@ -25,6 +25,14 @@ func findDirectoryPath(javaClass entities.BaseJavaClass) string {
 	return config.CONFIG.BaseJavaDir + strings.ReplaceAll(javaClass.Packages, ".", "/") + "/"
 }
 
+/* updateImport 
+*  updates the import statements in a Java class based on the field type.
+*
+*  It adds import statements for List, Set, and LocalDate if they are not already present in the class.
+*
+*  @param field (entities.JpaField): The field whose type will be used for updating the imports.
+*  @param entity (*entities.BaseJavaClass): A pointer to the Java class to be updated.
+*/
 func updateImport(field entities.JpaField, entity *entities.BaseJavaClass) {
 	if strings.Contains(field.Type, "List<") && !strings.Contains(entity.Imports, ".List;"){
 		entity.Imports += "\nimport java.util.List;"
@@ -37,6 +45,17 @@ func updateImport(field entities.JpaField, entity *entities.BaseJavaClass) {
     }
 }
 
+/*createClassField 
+* generates the Java code for a class field with annotations.
+*
+* The function constructs a map of parameters for string formatting, including annotations, field type, and field name.
+* It then uses utils.FormatString to generate the Java code for the field with annotations.
+*
+* @param field (entities.JpaField): The field for which the code will be generated.
+* @param annotations ([]string): A slice of annotations to be applied to the field.
+* @param entity (*entities.BaseJavaClass): A pointer to the Java class to which the field belongs.
+* @return (string): The generated Java code for the class field.
+*/
 func createClassField(field entities.JpaField, annotations []string, entity *entities.BaseJavaClass) string {
 	paramsMap := map[string]string{
 		"{%annotations%}": createAnnotations(annotations, field.Name, entity.ClassName), 
@@ -45,6 +64,21 @@ func createClassField(field entities.JpaField, annotations []string, entity *ent
 	}
 	return utils.FormatString(paramsMap, java.JavaEntityField)
 }
+
+/*createAnnotations 
+* generates Java annotations for a field.
+*
+* The function modifies 'fieldName' by removing occurrences of "List" and "Set".
+* It also converts a class Name to an attribute name.
+* The function then iterates through the annotations and processes the "mtm" annotation.
+* For "mtm" annotations, it generates a many-to-many table name and formats the annotation accordingly.
+* The modified annotations are then joined into a single string and returned.
+*
+* @param annotations ([]string): A slice of annotations to be applied to the field.
+* @param fieldName (string): The name of the field.
+* @param className (string): The name of the class to which the field belongs.
+* @return (string): Java annotations for the field.
+*/
 func createAnnotations(annotations []string, fieldName, className string) string {
 	fieldName = strings.ReplaceAll(fieldName, "List", "")
 	fieldName = strings.ReplaceAll(fieldName, "Set", "")
@@ -63,9 +97,28 @@ func createAnnotations(annotations []string, fieldName, className string) string
     }
     return strings.Join(annotations, "")
 }
+
+/*
+* Creates a many to many annotation based on the field name and the class name.
+* It checks if the annotation already exists in the map and returns it if it does.
+*/
 func createManyToManyAnnotation(fieldName, className string) string {
     return checkManyToManyExists(fieldName, className)
 }
+
+/*checkManyToManyExists 
+* checks if a many-to-many relationship already exists in the MTM_MAP.
+* If not, it generates a unique key and value based on the field and class names.
+*
+* It first creates a unique key using 'createMapKey'. That keys is based on the field and class names.
+* It then checks if the key exists in the MTM_MAP.
+* If not, it generates a value using the class and field names and stores it in the map.
+* Finally, it returns the value.
+*
+* @param fieldName (string): The name of the field.
+* @param className (string): The name of the class.
+* @return (string): The value associated with the key in MTM_MAP.
+*/
 func checkManyToManyExists(fieldName, className string) string {
 	key := createMapKey(fieldName, className)
 	val, ok := MTM_MAP[key]
@@ -91,12 +144,22 @@ func createMapKey(fieldName, className string) uint64 {
 	}
 	return sum 
 }
+
+
 func WriteClassImports(classes []entities.JpaEntity) {
 	for _, class := range classes {
 		EntityTypes[class.Name] = createPackage(class, config.CONFIG.DtoPackage)
 	}
 }
-
+/* createPackage
+*  generates the package name based on the provided entity and package option.
+*
+*  It applies the specified package policy to determine the resulting package name.
+*
+*  @param entity (entities.JpaEntity): A JpaEntity object representing the entity.
+*  @param option (config.PackageOption): A configuration option for handling packages.
+*  @return (string): The generated package name.
+*/
 func createPackage(entity entities.JpaEntity, option config.PackageOption) string {
 	if option.PackagePolicy == "appended" {
 		if option.Package == "" {
@@ -110,6 +173,15 @@ func createPackage(entity entities.JpaEntity, option config.PackageOption) strin
 	return entity.Package
 }
 
+/* CreateParamsMapAndIrrigateTemplates 
+*  generates a parameter map for template filling and sets package information.
+*
+*  It creates a map with placeholders and their corresponding values for template filling.
+*  Additionally, it sets package information for various Java classes.
+*
+*  @param entity (entities.JpaEntity): A JpaEntity object representing the entity.
+*  @return (map[string]string): A map containing template placeholders and their values.
+*/
 func CreateParamsMapAndIrrigateTemplates(entity entities.JpaEntity) map[string]string {
 	paramsMap := map[string]string{
 		"{%dto_package%}":        createPackage(entity, config.CONFIG.DtoPackage),
@@ -158,6 +230,19 @@ func CreateParamsMapAndIrrigateTemplates(entity entities.JpaEntity) map[string]s
 	return paramsMap
 }
 
+/* CreateSimpleClass 
+*  creates a simple Java class based on the provided entity and template class.
+*
+*  The function performs the following tasks:
+*    - Copies various properties from the 'noParamClass' template class.
+*    - Formats and sets imports, annotations, class type, class name, class suffix, implements, and extends.
+*    - Finds the directory path and sets the file name for the class.
+*
+*  @param class (entities.JpaEntity): A JpaEntity object representing the entity.
+*  @param paramsMap (map[string]string): A map containing template placeholders and their values.
+*  @param noParamClass (entities.BaseJavaClass): A template class object without parameters.
+*  @return (entities.BaseJavaClass): A BaseJavaClass object representing the created Java class.
+*/
 func CreateSimpleClass(class entities.JpaEntity, paramsMap map[string]string, noParamClass entities.BaseJavaClass) entities.BaseJavaClass {
 	paramClass := entities.BaseJavaClass{
 		Packages:    noParamClass.Packages,

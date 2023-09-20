@@ -368,7 +368,7 @@ func createAttribute(tokens [][]SyntaxToken, i, j int, annotations []Annotation)
 *    - Checks for generic types and recursively processes their subtypes.
 *    - Handles different types of brackets and commas for generic type parameters.
 *
-*  @param tokens ([]SyntaxToken): Tokens representing a Java type.
+*  @param tokens ([]SyntaxToken): Tokens representing a Java instruction.
 *  @param j (int): Current position within the token sequence.
 *  @return (JavaType, int): A JavaType object representing the parsed Java type and an updated position.
 */
@@ -401,6 +401,24 @@ func createJavaType(tokens []SyntaxToken, j int) (JavaType, int) {
 	return javaType, j
 }
 
+/*createAnnotations 
+* processes a sequence of syntax tokens representing annotations in Java and constructs a slice of Annotation objects.
+*
+*
+* It returns a slice of Annotation objects representing the parsed Java annotations, and updated positions 'int'.
+*
+* The function performs the following tasks:
+*   - Initializes an empty slice of Annotation objects.
+*   - Iterates through the tokens and processes annotation delimiters.
+*   - For each annotation, constructs an Annotation object, assigns its name, and checks for variables.
+*   - Appends the constructed Annotation to the list.
+*
+* @param tokens ([][]SyntaxToken): Tokens representing a 2D slice of Java Tokens.
+* @param i (int): Current position in the token stream.
+* @param j (int): Current position within the current token sequence.
+* @param class (*Class): Pointer to a Class object, which may be used for further processing.
+* @return ([]Annotation, int, int): A slice of Annotation objects representing parsed Java annotations, and updated positions.
+*/
 func createAnnotations(tokens [][]SyntaxToken, i, j int, class *Class) ([]Annotation, int, int) {
 	if len(tokens[i]) < 2 {
 		utils.HandleTechnicalError(fmt.Errorf("Unexpected token %s", tokens[i][0].Value), config.ERR_JAVA_PARSING_FAILED)
@@ -420,6 +438,22 @@ func createAnnotations(tokens [][]SyntaxToken, i, j int, class *Class) ([]Annota
 	return annotations, i, j
 }
 
+/* handleAnnotationArray 
+*  processes a sequence of syntax tokens representing a 2D slice of Java Tokens when there is an array in an annotation.
+*
+*  It returns two integers representing updated positions in the token stream.
+*
+*  The function performs the following tasks:
+*    - Increments the index 'i' to move to the next token sequence.
+*    - Iterates through the tokens to extract values for the annotation array.
+*    - Appends each token to the 'Name.Values' slice of the variable.
+*    - Ensures proper handling of commas and closing brackets.
+*
+*  @param i (int): Current position in the token stream.
+*  @param tokens ([][]SyntaxToken): Tokens representing Java code.
+*  @param variable (*Variable): Pointer to a Variable object to be updated with the array values.
+*  @return (int, int): Two integers representing updated positions in the token stream.
+*/
 func handleAnnotationArray(i int, tokens [][]SyntaxToken, variable *Variable) (int, int) {
     i++
     j := 0
@@ -437,6 +471,24 @@ func handleAnnotationArray(i int, tokens [][]SyntaxToken, variable *Variable) (i
     return i, 0
 }
 
+/* createAnnotationVariable 
+*  processes syntax tokens representing annotation variables in Java and constructs a slice of Variable objects.
+*
+*  It returns a slice of Variable objects representing the parsed annotation variables, and updated positions 'int'.
+*
+*  The function performs the following tasks:
+*    - Initializes an empty slice of Variable objects.
+*    - Iterates through the tokens to process variables, handling different cases.
+*    - Assigns names and values to variables based on token types.
+*    - Appends the constructed Variable objects to the list.
+*
+*  @param tokens ([][]SyntaxToken): Tokens representing Java code.
+*  @param i (int): Current position in the token stream.
+*  @param j (int): Current position within the current token sequence.
+*  @param class (*Class): Pointer to a Class object, which may be used for further processing.
+*  @param annotation (Annotation): Annotation object that may be used for further processing.
+*  @return ([]Variable, int, int): A slice of Variable objects representing parsed annotation variables, and updated positions.
+*/
 func createAnnotationVariable(tokens [][]SyntaxToken,i, j int, class *Class, annotation Annotation) ([]Variable, int, int) {
 	j++
 	variables := []Variable{}
@@ -505,6 +557,20 @@ func intializedJavaFile(tokens [][]SyntaxToken, i int) (JavaInterpreted, int) {
 	return javaFile, i
 }
 
+/* createImportStatement 
+*  processes syntax tokens representing an import statement in Java and constructs an ImportStatement object.
+*
+*  It returns an ImportStatement object representing the parsed import statement.
+*
+*  The function performs the following tasks:
+*    - Initializes an ImportStatement object with the keyword based on the first token.
+*    - Iterates through the tokens to construct the package path and Java import name.
+*    - Handles different cases for WORD_KIND and STAR_KIND tokens, updating the ImportStatement accordingly.
+*    - Detects unexpected tokens and raises a technical error if encountered.
+*
+*  @param tokens ([]SyntaxToken): Tokens representing an import statement in Java.
+*  @return (ImportStatement): An ImportStatement object representing the parsed import statement.
+*/
 func createImportStatement(tokens []SyntaxToken) ImportStatement {
 	importStatement := ImportStatement{
 		Keyword: Keyword{Name: tokens[0]},
