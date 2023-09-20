@@ -122,7 +122,7 @@ func CreateMethodNameFromUrl(url string) string {
         if isUrlRemovedChar(url[i])  {
             appendedString := url[positionOfLastPattern+1:i]
             if appendedString != "" {
-                appendedString = ToTitle(appendedString)
+                appendedString = strings.Title(appendedString)
             }
             newName += appendedString
             positionOfLastPattern = i

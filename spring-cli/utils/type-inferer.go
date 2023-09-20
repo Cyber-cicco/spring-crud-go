@@ -30,7 +30,7 @@ func InfereTypeByName(fieldName string) string {
         fieldName = strings.ReplaceAll(fieldName, "List", "")
         fieldName = strings.ReplaceAll(fieldName, "Set", "")
         fieldName = strings.ReplaceAll(fieldName, "*", "")
-        fieldName = ToTitle(fieldName)
+        fieldName = strings.Title(fieldName)
         return strings.Replace(returnedType, "{returned}", fieldName, 1);
     }
 

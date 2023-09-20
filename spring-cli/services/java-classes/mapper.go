@@ -19,7 +19,7 @@ func createMapperBody(object entities.JpaEntity, paramsMap map[string]string) st
     var dtoSets = []string{}
     var entitySets = []string{}
     for _, field := range object.Fields{
-        mapField := map[string]string { "{%field_title%}" : utils.ToTitle(field.Name) }
+        mapField := map[string]string { "{%field_title%}" : strings.Title(field.Name) }
         rawType := utils.DenestObject(field.Type)
         _, exists := EntityTypes[rawType]
         if !exists {

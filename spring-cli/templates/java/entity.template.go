@@ -34,6 +34,7 @@ import lombok.NoArgsConstructor;
     Body :
 `
     @Id()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;      
 {%fields%}
 

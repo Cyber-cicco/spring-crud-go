@@ -29,7 +29,7 @@ func createDtoBody(object entities.JpaEntity, entity *entities.BaseJavaClass) st
             field.Type = strings.ReplaceAll(field.Type, rawType, rawType + config.CONFIG.DtoPackage.Suffix)
         }
         updateImport(field, entity)
-        fields = append(fields, createClassField(field, []string{}))
+        fields = append(fields, createClassField(field, []string{}, entity))
     }
     return  strings.Join(fields, "")
 }

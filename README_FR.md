@@ -2,26 +2,26 @@
 
 ## Présentation
 
-Spring-go est une application en ligne de commande aidant à la mise en place et la gestion de projet pour les applications fullstack Spring-boot / Angular basée sur des API REST. Elle s'appuie sur le respect du design pattern controller - service - repository jpa - mapper - dto
+Spring-go est une application en ligne de commande aidant à la mise en place et la gestion de projet pour les applications fullstack Spring-boot / Angular basée sur des API REST. Elle s'appuie sur le respect du design pattern controller - service - repository jpa - mapper - dto.
 
-  On part du principe suivant : un développeur back a pour travail d'écrire de la logique métier, et un développeur front de mettre en place une UI pour que les utilisateurs puissent interagir avec le back. Tout temps que le développeur back passe à écrire du boilerplate pour permettre les opérations CRUD, et tout le temps que le développeur front passe à définir de la logique métier déjà présente dans le back est du temps perdu. Et les stacks Spring-Boot / Angular font très certainement partis des pires pour ce qui est de faire écrire du code inutile à ses développeurs
+  On part du principe suivant : un développeur back a pour travail d'écrire de la logique métier, et un développeur front de mettre en place une UI pour que les utilisateurs puissent interagir avec le back. Tout temps que le développeur back passe à écrire du boilerplate pour permettre les opérations CRUD, et tout le temps que le développeur front passe à de la logique du back est du temps perdu. Et les stacks Spring-Boot / Angular sont très friands de ce type de code.
 
 Le but de cette application est de tenter de remedier aux problèmes de ce stack technique.
 
 ## Problématiques que l'on cherche à régler
 
 ### La verbosité des opérations des CRUD dans Spring Boot
- * L'utilisation de design patterns basés sur les repository JPA, les mappers et les Dtos amène à **l'écriture d'une grande quantité de code répétitif et difficile à abstraire sans inutilement complexifier le code** (notamment en ce qui concerne les mappers). Certains framework de mapping comme Mapstruct tentent de remédier à cela, mais ils deviennent vite complexes à utiliser lorsque l'on souhaite des règles particulières. Notre application propose ainsi la possibilité de **générer du boilerplate (et uniquement du boilerplate)**, proposant une forme de template pour un controller, un service, un repository, un mapper et un dto pour chaque entité d'un projet.
+ * L'utilisation de design patterns basés sur les repository JPA, les mappers et les Dtos amène à **l'écriture d'une grande quantité de code répétitif et difficile à abstraire sans inutilement complexifier le code** (notamment en ce qui concerne les mappers). Certains framework de mapping comme Mapstruct tentent de remédier à cela, mais ils deviennent vite complexes à utiliser lorsque l'on souhaite implémenter du mapping pour les champs complexes. Notre application propose ainsi la possibilité de **générer du boilerplate (et uniquement du boilerplate)**, proposant une forme de template pour un controller, un service, un repository, un mapper et un dto pour chaque entité d'un projet.
 
 ### La verbosité de JPA dans la création des entités
  * L'initialisation d'un projet peut parfois **prendre beaucoup de temps sur Spring**, notamment du fait que l'on ai besoin d'écrire des entités JPA et que la configurations de celles-ci est souvent très verbeuse. Spring-go propose de pouvoir faire cela de façon beaucoup plus rapide en tappant le nom de l'entité et de ses champs en ligne de commande pour générer des fichiers de configuration permettant ensuite de générer les entités JPA, un peu à la façon d'un **JPA Buddy en ligne de commande**
 
 ### L'inconsistance des designs patterns dans un gros projet Spring boot
- * Il est assez facile pour un gros projet d'avoir plusieurs personnes débarquant chacune avec leurs habitudes concernant le code. Certains vont suffixé leurs controllers par "Controller", d'autres par "Ctrl", etc. Certains vont créer les mappers à la main, d'autres vont utiliser des framework de mapping. Certains aiment avoir des interfaces définissant des opérations nécessaires pour chaque service, d'autres vont oublier des les implémenter. Pour cela, ce programme propose un **fichier de configuration et des templates permettant d'assurer que chaque élément généré par le CLI de suivre certaines règles de design concernant les suffixes des classes, les interfaces qu'elles implémentent, etc.**
+ * Il est assez facile pour un gros projet d'avoir plusieurs personnes arrivant chacunes avec leurs habitudes concernant le code. Certains vont suffixé leurs controllers par "Controller", d'autres par "Ctrl", etc. Certains vont créer les mappers à la main, d'autres vont utiliser des framework de mapping. Certains aiment avoir des interfaces définissant des opérations nécessaires pour chaque service, d'autres vont oublier des les implémenter. Pour cela, ce programme propose un **fichier de configuration et des templates permettant d'assurer que chaque élément généré par le CLI de suivre certaines règles de design concernant les suffixes des classes, les interfaces qu'elles implémentent, etc.**
 
 ### Le manque d'outils d'écriture de Java pour les éditeurs de texte classiques
  * Toutes les IDEs ne proposent pas nécessairement d'utilitaire de génération de classe, notamment les éditeurs de texte boostés aux plugins comme VSCode, NeoVim et Vim. Le but de ce projet est d'offir un programme qui permet de **créer divers types de classe à partir d'une ligne de commande.**
-  Par défaut, il y a des templates pour les classes, les interfaces, les records, les enums, les controllers, les repository, les services, les dtos, les entités, les mappers et les exceptions. Il est possible d'en rajouter d'autres en changeant quelques lignes de code, et de personaliser celles existantes en changeant simplement le contenu des templates.
+  Par défaut, il y a des templates pour les classes, les interfaces, les records, les enums, les controllers, les repository, les services, les dtos, les entités, les mappers et les exceptions. Il est possible d'en rajouter d'autres en changeant quelques lignes de code, et de personaliser celles existantes en changeant simplement le contenu des templates. **A noter que ce type de template existe déjà dans IntelliJ**
 
 ### La difficulté de la cohérence des types entre back et front
 
@@ -39,19 +39,48 @@ Le but de cette application est de tenter de remedier aux problèmes de ce stack
 
 ### Installation:
 
-Actuellement, il faut copier le dossier springCli, go.mod, go.sum et spring-parameters.json à la racine d'un projet Spring boot. Ensuite, il faut lancer le fichier .cmd dans le dossier springCli/cmd/ pour pouvoir lancer l'application. Le binaire ne fonctionnera potentiellement pas sur Windows, il faut donc mieux avoir go installé et lancer la commande
+Pour une installation sans volonté de modifier le code source, il est maintenant possible de se 
+saisir de la relase dans le dépôt GitHub et de lancer le script d'installation en suivant les instructions du fichier INSTALL.
+
+L'installation fonctionne et a été testé dans un environnement Linux. Il existe également un binaire fonctionnel pour Windows dans une autre release, mais cela nécessite d'avoir installé GitBash, et demande d'exécuter le script via GitBash 
+
+Sinon, vous pouvez cloner le repo, aller dans le dossier spring-cli, et lancer :
+
 ```bash
-go build
+go install
 ```
+
 pour créer le binaire adapté à votre OS.
 Si go n'est pas installé, vous pouvez utiliser ce lien pour l'installer :
 [https://go.dev/doc/install](https://go.dev/doc/install)
 
-Ensuite, il suffit d'exécuter le fichier cmd de cette façon : 
+Ensuite, il suffit de créer un alias pointant vers le fichier ~/go/bin/spring-cli pour pouvoir commencer à utiliser l'outil en ligne de commande
+
+### Initialiser un projet 
+
+**En supposant que l'alias que vous avez choisi est springgo,** lancez, à la racine d'un projet Spring Boot, la commande suivante:
 
 ```bash
-./cmd
+springgo init
 ```
+
+Cela créera un dossier templates/ contenant des templates au format texte de chaque élément d'une 
+classe dans un dossier qui lui correspond. Par exemple, un Repository possédera un dossier templates/Repository/ dans lequel on va trouver une fichier ClassType.txt contenant juste le mot 
+```
+interface
+```
+Le changer en 
+```
+class
+```
+fera en sorte que les Repository créés ne soient plus des interfaces, mais des
+classes. Plus d'informations dans la partie **Personnalisation**.
+
+Initialiser un projet crée également un dossier jpa/ , dans lequel se trouveront 
+tous les fichiers de configuration générés par la commande jpa. Plus 
+d'information dans la partie **Générer des classes de CRUD** 
+
+Enfin, initialiser un projet crée un fichier spring-parameters.json. Plus d'informations dans la partie :
 
 ### Configuration
 La configuration par défaut se trouve dans spring-parameters.json.
@@ -395,7 +424,7 @@ Ce fichier de configuration se trouvera dans le dossier springCli/jpa/
 ```
 
 Cette commande va générer le projet à partir des fichiers de configuration des entités JPA.
-P ces deux commandes :
+Pout ces deux commandes :
 
 ```bash
 ./cmd jpa -c Foo -f "*bar@mto nbPoint dateCreation"
@@ -544,8 +573,27 @@ export class FooHttpService {
  ## Ce que ce projet n'est pas / ne veut pas être
 
  ### Un meilleur stack
-  * Si nous n'étions pas déjà au courant qu'un stack Spring-Boot / Angular n'était pas forcément optimal d'un point de vue de l'expérience de développement, nous n'aurions pas créé un utilitaire de génération de code en premier lieu. Ce projet est fait pour les personnes coincées dans ce stack, quelqu'en soit la raison.
+  * Le but n'est pas de recréer un stack sans les difficultés de Spring Boot / Angular. Il est possible que les Server Component de React, Next.js, ou Go / HTMX soient des technologies plus adaptées au développement web moderne. Toujours est-il que Spring Boot / Angular existe, a des avantages pour accompagener ses difficultés, et qu'il est possible de
+  rendre l'expérience de développement dans ces conditions plus agréable
 
 ### Jhipster / Wordpress
  * L'outil a pour but de générer du boilerplate personnalisable en fonction des librairies d'un projet, de ses conventions de nommage, de l'organisation de ses packages, etc (même s'il y a une grosse dépendance à Lombok). D'un point de vue général, on ne souhaite intégrer aucune forme de logique métier dans les classes, et aucune forme de mise à jour permettant de créer automatiquement de la configuration de sécurité ou quelque chose du même acabit n'est prévue. Le but est d'en faire une forme d'API de génération de boilerplate pour un projet Spring Boot / Angular, pas un outil qui crée un site internet remplis de code non controllé en tappant "springgo create facebook" dans le terminal.
 
+## Personalisation
+
+### Personnaliser les templates
+Le script est fait pour être personnalisable en fonction de vos besoins particuliers pour un projet. Si vous utilisez javax au lieu de jakarta, vous devrez personnaliser la génération de classe Java pour la faire correspondre à votre environnement. Pour cela, chaque forme de classe possède un dossier qui lui correspond dans le dossier templates/ généré par la commande init.
+
+Voici un résumé du rôle de chaque fichier :
+
+* Annotations.txt : Correspond aux annotations de la classe
+* Body.txt : Correspond au contenu de la classe, après sa déclaration
+* ClassType.txt : Correspond au type de la classe : interface, class, record, etc.
+* Extends : permet de définir une classe parente.
+* Implements : permet de définir des interfaces implémentées
+* Imports : permet de définir les imports de base de la classe
+
+### Personnaliser la logique du script
+
+La logique de création des classes se trouve dans spring-cli/services/class_writer.go
+La documentation de chaque fonction arrive bientôt

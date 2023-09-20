@@ -17,10 +17,6 @@ et essaiera de trouver le package principal à partir de cela.
   `,
 
 	Run: func(cmd *cobra.Command, args []string) {
-        services.CreateBaseProject(&_package)
+        services.CreateBaseProject()
     },
-}
-
-func init() {
-    initCmd.Flags().StringVarP(&_package, "package", "p", "", "Nom du package de base du projet")
 }

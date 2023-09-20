@@ -1,7 +1,6 @@
 package services
 
 import (
-
 	"fr.cybercicco/springgo/spring-cli/config"
 	"fr.cybercicco/springgo/spring-cli/daos"
 	"fr.cybercicco/springgo/spring-cli/entities"
@@ -55,26 +54,8 @@ func CreateJavaClasses(){
     }
 }
 
-func initializeClassesFromTemplates(){
-    daos.ReadTemplateFile([]entities.BaseJavaClass{
-        java.JavaException,
-        java.JavaAnnotation,
-        java.JavaInterface,
-        java.JavaEnum,
-        java.JavaRecord,
-        java.JavaBaseClass,
-        java.JavaController, 
-        java.JavaService, 
-        java.JavaDto, 
-        java.JavaMapper, 
-        java.JavaEntity,
-        java.JavaRepository, 
-    })
-}
-
 func CreateJavaClass(cname, classType string){
     cname, pname := utils.GetClassNameAndPackageFromArgs(cname)
-    initializeClassesFromTemplates()
     classInfos := entities.JpaEntity{
         Name : cname,
         Package: config.CONFIG.BasePackage + pname,
@@ -124,16 +105,10 @@ func CreateJavaClass(cname, classType string){
 }
 
 func loadFieldsFromTemplate(javaClass *entities.BaseJavaClass, directoryName string){
-    javaClass.Packages = daos.ReadTemplateField(directoryName + "Packages.txt")
     javaClass.Imports = daos.ReadTemplateField(directoryName + "Imports.txt")
-    javaClass.SpecialImports = daos.ReadTemplateField(directoryName + "SpecialImports.txt")
     javaClass.Annotations = daos.ReadTemplateField(directoryName + "Annotations.txt")
     javaClass.ClassType = daos.ReadTemplateField(directoryName + "ClassType.txt")
-    javaClass.ClassName = daos.ReadTemplateField(directoryName + "ClassName.txt")
-    javaClass.ClassSuffix = daos.ReadTemplateField(directoryName + "ClassSuffix.txt")
     javaClass.Implements = daos.ReadTemplateField(directoryName + "Implements.txt")
     javaClass.Extends = daos.ReadTemplateField(directoryName + "Extends.txt")
     javaClass.Body = daos.ReadTemplateField(directoryName + "Body.txt")
-    javaClass.FileName = daos.ReadTemplateField(directoryName + "FileName.txt")
-    javaClass.Directory = daos.ReadTemplateField(directoryName + "Directory.txt")
 }

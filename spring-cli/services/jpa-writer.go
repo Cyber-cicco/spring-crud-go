@@ -48,14 +48,15 @@ func createAnnotations(annotation []string, fieldName string, cname string) []st
 	}
 	fieldName = strings.ReplaceAll(fieldName, "List", "")
 	fieldName = strings.ReplaceAll(fieldName, "Set", "")
+    attributeName := utils.ToAttributeName(cname)
 	paramsMap := map[string]string{
-		"{%class_name%}":        utils.ToAttributeName(cname),
+		"{%class_name%}": attributeName, 
 		"{%target_class_name%}": fieldName,
 	}
 	switch strings.Split(annotation[1], ":")[0] {
 	case "mtm":
 		{
-			return checkManyToMany(paramsMap)
+			return []string{"mtm"}
 		}
 	case "mto":
 		{
@@ -70,33 +71,4 @@ func createAnnotations(annotation []string, fieldName string, cname string) []st
 			return []string{}
 		}
 	}
-}
-
-func checkManyToMany(paramsMap map[string]string) []string {
-	key := createMapKey(paramsMap)
-	val, ok := MTM_MAP[key]
-	if !ok {
-		val = utils.FormatString(paramsMap, MANY_TO_MANY)
-		MTM_MAP[key] = val
-	}
-	return []string{val}
-}
-
-/**
-* prend le nom du field et du nom de la class pour en trouver une clé en faisant un XOR dessus.
-* Comme ça, dans le cas d'un autre many to many désignant la même solution mais dans l'autre classe
-* cela permettra de récupérer le many to many déjà créé.
- */
-func createMapKey(paramsMap map[string]string) uint64 {
-	runesCname := []rune(paramsMap["{%class_name%}"])
-	runesTarget := []rune(paramsMap["{%target_class_name%}"])
-	var sumCname uint64
-	var sumTarget uint64
-	for _, val := range runesCname {
-		sumCname += uint64(val)
-	}
-	for _, val := range runesTarget {
-		sumTarget += uint64(val)
-	}
-	return sumCname | sumTarget
 }

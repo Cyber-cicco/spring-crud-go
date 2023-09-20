@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"strings"
 
 	"fr.cybercicco/springgo/spring-cli/config"
@@ -114,6 +115,7 @@ func createTsInterface(fileContent string){
         attributesString += utils.FormatString(paramsMap, angular.INTERFACE_ATTRIBUTE_TEMPLATE)
     }
     paramsMap["{%attributes%}"] = attributesString
+    fmt.Printf("config.CONFIG.TsInterfaceFolder: %v\n", config.CONFIG.TsInterfaceFolder)
     daos.WriteSimpleFile(config.CONFIG.TsInterfaceFolder, utils.ToInterfaceFileName(interfaceName),[]byte(utils.FormatString(paramsMap, angular.INTERFACE_TEMPLATE))) 
 }
 

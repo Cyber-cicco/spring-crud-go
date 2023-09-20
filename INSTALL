@@ -1,0 +1,22 @@
+----------------
+    Linux : 
+----------------
+1) Exécutez le script install.sh. Celui-ci placera le binaire dans un dossier /go/bin/ à la racine du répertoire de l'utilisateur, et créera un alias dans .bashrc
+
+2) Vous pourrez commencer à utiliser le CLI en tappant springgo dans la console
+
+----------------
+    Windows : 
+----------------
+1) Récupérez le fichier .exe
+
+2) Installez Git bash si ce n'est pas déjà fait
+
+3) Utilisez les commandes suivantes dans git bash lancé en tant qu'administrateur :
+
+mkdir ~/go/bin;
+mv spring-cli.exe ~/go/bin/spring-cli.exe
+echo "alias spring-go='/go/bin/spring-cli.exe'" >> C:/'Program Files'/Git/etc/profile.d/aliases.sh
+
+4) Vous pouvez maintenant commencer à utiliser spring-go
+

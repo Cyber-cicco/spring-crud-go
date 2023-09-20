@@ -5,6 +5,11 @@ var CONFIG Config
 const RELATIVE_PATH string = "../../"
 const JAVA_PATH string = "src/main/java/"
 
+
+/*
+*   Config
+*   Structure de configuration du CLI
+*/
 type Config struct{
     BaseJavaDir string `json:"-"`
     JpaJsonFilePath string `json:"-"`
@@ -22,6 +27,11 @@ type Config struct{
     TsServiceFolder string`json:"ts-service-folder"`
 }
 
+
+/*
+*   PackageOption
+*   Structure de configuration d'un package d'un type de classe java spécifique
+*/
 type PackageOption struct{
     Package string `json:"package"`
     PackagePolicy string`json:"package-policy"`

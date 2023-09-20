@@ -12,9 +12,16 @@ type textTemplate struct {
     content string
 }
 
-func CreateBaseProject(pkg *string){
+/*
+*   CreateBaseProject
+*   Créer un fichier de configuration du CLI dans le dossier
+*   Vérifiera l'existence d'un projet java par la recherche du répertoire src/main/java,
+*   et essaiera de trouver le package principal à partir de cela.
+*   Créera également des templates permettant de customiser les fichiers générés
+*/
+func CreateBaseProject(){
     newConfigFile := config.Config {
-        BasePackage : *pkg, 
+        BasePackage : daos.FindBasePackage(),
         EreaseFiles : false,
         EntityPackage : config.PackageOption {
             Package: "entities",
@@ -46,12 +53,18 @@ func CreateBaseProject(pkg *string){
             PackagePolicy: "appended",
             Suffix: "Controller",
         },
+        TsInterfaceFolder: "models/",
+        TsServiceFolder: "http-services/",
     }
     daos.WriteBaseConfigFile(newConfigFile)
     createJavaTemplateTextFiles()
 
 }
 
+/*
+*   createJavaTemplateTextFiles
+*   Créer les fichiers de templates java
+*/
 func createJavaTemplateTextFiles() {
         daos.WriteTemplateFile(java.JavaException, "Exception/")
         daos.WriteTemplateFile(java.JavaAnnotation, "Annotation/")
