@@ -1,6 +1,6 @@
 # Spring-go
 
-## Présentation
+## Presentation
 
 Spring-go is a command-line application that assists in setting up and managing projects for fullstack Spring-boot / Angular applications based on RESTful APIs. It relies on adhering to the controller - service - jpa repository - mapper - dto design pattern.
 
