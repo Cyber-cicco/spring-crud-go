@@ -66,7 +66,7 @@ The default configuration is located in `spring-parameters.json`. It contains th
 
 * `base-package`: the base package of the project, which prefixes all others.
 
-* `erase-files`: determines whether, when creating a file with an existing name, it is overwritten or not. **IT IS STRONGLY ADVISED TO KEEP THIS AS FALSE**. The `./cmd project` command could potentially reset entire classes if you forget to clean up your JPA folder files when generating new classes (more details on this in the "project generation" section).
+* `erase-files`: determines whether, when creating a file with an existing name, it is overwritten or not. **IT IS STRONGLY ADVISED TO KEEP THIS AS FALSE**. The `springgo project` command could potentially reset entire classes if you forget to clean up your JPA folder files when generating new classes (more details on this in the "project generation" section).
 
 * `ts-interface-folder`: folder where TypeScript interfaces will be stored. It is recommended to configure this towards an Angular project (or TypeScript project in general).
 
@@ -83,7 +83,7 @@ The default configuration is located in `spring-parameters.json`. It contains th
 ### Generating a base java class
 
 ```bash
-./cmd class -c Foo
+springgo class -c Foo
 ```
 
 This command allows you to create this simple class:
@@ -101,7 +101,7 @@ This class will be placed in the package specified in [spring-parameters.json](s
 You can also generate a class in this way:
 
 ```bash
-./cmd class -c bar.Foo
+springgo class -c bar.Foo
 ```
 Thus, the class will be placed in the `bar` package, added to the base package specified in the configuration file.
 
@@ -116,7 +116,7 @@ The `-t` option allows you to specify a particular class type, like this:
 Generate a controller:
 
 ```bash
-./cmd class -c Foo -t ctrl
+springgo class -c Foo -t ctrl
 ```
 ```java
 package com.example.springgo.controller;
@@ -135,7 +135,7 @@ public class FooController {
 ```
 Generate a service :
 ```bash
-./cmd class -c Foo -t srv
+springgo class -c Foo -t srv
 ```
 ```java
 package com.example.springgo.service;
@@ -151,7 +151,7 @@ public class FooService {
 ```
 Generate an entity :
 ```bash
-./cmd class -c Foo -t ent
+springgo class -c Foo -t ent
 ```
 ```java
 package com.example.springgo.entites;
@@ -174,7 +174,7 @@ public class Foo {
 ```
 Generate a mapper :
 ```bash
-./cmd class -c Foo -t map
+springgo class -c Foo -t map
 ```
 ```java
 package com.example.springgo.dto;
@@ -190,7 +190,7 @@ public class FooTransformer {
 ```
 Generate a Dto :
 ```bash
-./cmd class -c Foo -t dto
+springgo class -c Foo -t dto
 ```
 ```java
 package com.example.springgo.dto;
@@ -211,7 +211,7 @@ public class FooDto {
 ```
 Generate a Repository :
 ```bash
-./cmd class -c Foo -t repo
+springgo class -c Foo -t repo
 ```
 ```java
 package com.example.springgo.repository;
@@ -228,7 +228,7 @@ public interface FooRepository extends JpaRepository<Foo, Long>  {
 ```
 Generate an Exception
 ```bash
-./cmd class -c Foo -t ex
+springgo class -c Foo -t ex
 ```
 ```java
 package com.example.springgo.exception;
@@ -241,7 +241,7 @@ public class FooException extends RuntimeException {
 ```
 Generate an Enum :
 ```bash
-./cmd class -c Foo -t enum
+springgo class -c Foo -t enum
 ```
 ```java
 package com.example.springgo;
@@ -253,7 +253,7 @@ public enum Foo {
 ```
 Generate an interface :
 ```bash
-./cmd class -c Foo -t int
+springgo class -c Foo -t int
 ```
 ```java
 package com.example.springgo;
@@ -265,7 +265,7 @@ public interface Foo {
 ```
 Generate a record :
 ```bash
-./cmd class -c Foo -t rec
+springgo class -c Foo -t rec
 ```
 ```java
 package com.example.springgo;
@@ -278,7 +278,7 @@ public record Foo() {
 ```
 Generate an annotation :
 ```bash
-./cmd class -c Foo -t ano
+springgo class -c Foo -t ano
 ```
 ```java
 package com.example.springgo;
@@ -296,7 +296,7 @@ This is done in two steps.
 #### 1. Generate the configuration files for JPA entities
  
 ```bash
-./cmd jpa -c Foo -f "bar nbBuzz dateBro"
+springgo jpa -c Foo -f "bar nbBuzz dateBro"
 ```
 ```json
 {
@@ -337,7 +337,7 @@ However, if this kind of behavior is not suitable, it is possible to manually ty
 Example:
 
 ```
- ./cmd jpa -c Foo -f "bar nbBuzz:Long dateBro"
+ springgo jpa -c Foo -f "bar nbBuzz:Long dateBro"
 ```
 Here, `nbBuzz` will be of type `Long`.
 
@@ -358,7 +358,7 @@ You can check the logic for creating annotations in [this file](./spring-cli/ser
 Finally, the last option is to specify that the field name should take on the type of the field name by capitalizing its first letter. While this may seem very specific, it actually serves to indicate that the field is an entity. For example:
 
 ```bash
- ./cmd jpa -c Foo -f "*bar nbBuzz dateBro "
+ springgo jpa -c Foo -f "*bar nbBuzz dateBro "
 ```
 will generate :
 ```json
@@ -394,15 +394,15 @@ will generate :
 #### 2 Generate a project
 
 ```
- ./cmd project
+ springgo project
 ```
 
 This command will generate the project from the JPA entity configuration files.
 For these two commands:
 
 ```bash
-./cmd jpa -c Foo -f "*bar@mto nbPoint dateCreation"
-./cmd jpa -c Bar -f "*foo@otm titre dateEcheance"
+springgo jpa -c Foo -f "*bar@mto nbPoint dateCreation"
+springgo jpa -c Bar -f "*foo@otm titre dateEcheance"
 ```
 
 ![generated project](./img/project.png)
@@ -412,7 +412,7 @@ For these two commands:
 The command is extremely simple:
 
 ```bash
-./cmd ng
+springgo ng
 ```
 This will generate, in the folder specified in spring-parameters.json, the interfaces and services corresponding to the back-end controllers and DTOs.
 

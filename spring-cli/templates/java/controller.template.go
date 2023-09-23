@@ -41,26 +41,6 @@ import java.util.List;
    
     private final {%class_name%}{%service_suffix%} {%class_name_lower%}{%service_suffix%};
 
-    @GetMapping
-    public ResponseEntity<List<{%class_name%}{%dto_suffix%}>> getAll{%class_name%}(){
-        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.recuperer());
-    }
-
-    @PostMapping
-    public ResponseEntity<{%class_name%}{%dto_suffix%}> save{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
-        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.creer(dto));
-    }
-
-    @PutMapping
-    public ResponseEntity<{%class_name%}{%dto_suffix%}> change{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
-        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.changer(dto));
-    }
-
-    @DeleteMapping
-    public ResponseEntity<{%class_name%}{%dto_suffix%}> delete{%class_name%}(@RequestBody {%class_name%}{%dto_suffix%} dto){
-        return ResponseEntity.ok({%class_name_lower%}{%service_suffix%}.supprimer(dto));
-    }
-
 `,
 
 }

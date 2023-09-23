@@ -87,7 +87,7 @@ La configuration par défaut se trouve dans spring-parameters.json.
 Il contient les paramètres suivants:
 *  base-package : le package de base du projet, qui préfixe tous les autres
 
-* erease-files : détermine si, lorsque l'on souhaite créer un fichier dont le nom existe déjà, il est écrasé ou non **IL EST FORTEMENT CONSEILLÉ DE LE GARDER À FALSE**. En effet la commande ./cmd project pourrait rééinitialiser des classes entières si vous avez oublié de faire le ménage dans vos fichiers du dossier JPA en voulant générer de nouvelles classes (plus de précision là dessus dans la partie "génération de projet")
+* erease-files : détermine si, lorsque l'on souhaite créer un fichier dont le nom existe déjà, il est écrasé ou non **IL EST FORTEMENT CONSEILLÉ DE LE GARDER À FALSE**. En effet la commande springgo project pourrait rééinitialiser des classes entières si vous avez oublié de faire le ménage dans vos fichiers du dossier JPA en voulant générer de nouvelles classes (plus de précision là dessus dans la partie "génération de projet")
 
 * ts-interface-folder : dossier dans lequel se trouveront stockés les interfaces typescript. Il est conseillé de le configurer vers un projet Angular (ou typescript d'une manière générale)
 
@@ -105,7 +105,7 @@ Sinon, on peut choisir l'option "base", qui permet de d'ignorer le package suppl
 ### Générer une classe simple
 
 ```bash
-./cmd class -c Foo
+springgo class -c Foo
 ```
 
 Permet de générer une classe simple :
@@ -123,7 +123,7 @@ Celle-ci sera placée dans le package précisée dans [spring-parameters.json](s
 On peut également générer une classe de cette façon : 
 
 ```bash
-./cmd class -c bar.Foo
+springgo class -c bar.Foo
 ```
 Ainsi, la classe sera placée dans le package bar, ajouté au package de base précisé dans le fichier de configuration.
 
@@ -140,7 +140,7 @@ L'option -t permet de préciser un type de classe particulier, de cette façon :
 
 Générer un controller :
 ```bash
-./cmd class -c Foo -t ctrl
+springgo class -c Foo -t ctrl
 ```
 ```java
 package com.example.springgo.controller;
@@ -159,7 +159,7 @@ public class FooController {
 ```
 Générer un service :
 ```bash
-./cmd class -c Foo -t srv
+springgo class -c Foo -t srv
 ```
 ```java
 package com.example.springgo.service;
@@ -175,7 +175,7 @@ public class FooService {
 ```
 Générer une entité :
 ```bash
-./cmd class -c Foo -t ent
+springgo class -c Foo -t ent
 ```
 ```java
 package com.example.springgo.entites;
@@ -198,7 +198,7 @@ public class Foo {
 ```
 Générer un mapper :
 ```bash
-./cmd class -c Foo -t map
+springgo class -c Foo -t map
 ```
 ```java
 package com.example.springgo.dto;
@@ -214,7 +214,7 @@ public class FooTransformer {
 ```
 Générer un Dto :
 ```bash
-./cmd class -c Foo -t dto
+springgo class -c Foo -t dto
 ```
 ```java
 package com.example.springgo.dto;
@@ -235,7 +235,7 @@ public class FooDto {
 ```
 Générer un Repo :
 ```bash
-./cmd class -c Foo -t repo
+springgo class -c Foo -t repo
 ```
 ```java
 package com.example.springgo.repository;
@@ -252,7 +252,7 @@ public interface FooRepository extends JpaRepository<Foo, Long>  {
 ```
 Générer une Exception :
 ```bash
-./cmd class -c Foo -t ex
+springgo class -c Foo -t ex
 ```
 ```java
 package com.example.springgo.exception;
@@ -265,7 +265,7 @@ public class FooException extends RuntimeException {
 ```
 Générer un Enum :
 ```bash
-./cmd class -c Foo -t enum
+springgo class -c Foo -t enum
 ```
 ```java
 package com.example.springgo;
@@ -277,7 +277,7 @@ public enum Foo {
 ```
 Générer une interface :
 ```bash
-./cmd class -c Foo -t int
+springgo class -c Foo -t int
 ```
 ```java
 package com.example.springgo;
@@ -289,7 +289,7 @@ public interface Foo {
 ```
 Générer un record :
 ```bash
-./cmd class -c Foo -t rec
+springgo class -c Foo -t rec
 ```
 ```java
 package com.example.springgo;
@@ -302,7 +302,7 @@ public record Foo() {
 ```
 Générer une annotation :
 ```bash
-./cmd class -c Foo -t ano
+springgo class -c Foo -t ano
 ```
 ```java
 package com.example.springgo;
@@ -320,7 +320,7 @@ Cela se fait en deux étapes
 #### 1 Générer les fichiers de configuration des entités JPA
 
 ```bash
-./cmd jpa -c Foo -f "bar nbBuzz dateBro"
+springgo jpa -c Foo -f "bar nbBuzz dateBro"
 ```
 ```json
 {
@@ -361,7 +361,7 @@ Cependant, si ce genre de comportement ne convient pas, il est possible de typer
 
 Exemple : 
 ```
- ./cmd jpa -c Foo -f "bar nbBuzz:Long dateBro"
+ springgo jpa -c Foo -f "bar nbBuzz:Long dateBro"
 ```
 Ici, nbBuzz sera de type Long
 
@@ -382,7 +382,7 @@ Il est possible d'aller vérifier la logique de création d'annotation dans [ce 
 Enfin, dernière option, il est possible de préciser que le nom du champ doit prendre le type du nom du champ en mettant sa première lettre en majuscule. Si cela peut paraitre très spécifique, cela permet en fait de préciser que le champ est une entité. Par exemple:
 
 ```bash
- ./cmd jpa -c Foo -f "*bar nbBuzz dateBro "
+ springgo jpa -c Foo -f "*bar nbBuzz dateBro "
 ```
 va générer :
 ```json
@@ -420,15 +420,15 @@ Ce fichier de configuration se trouvera dans le dossier springCli/jpa/
 #### 2 Générer le projet
 
 ```
- ./cmd project
+ springgo project
 ```
 
 Cette commande va générer le projet à partir des fichiers de configuration des entités JPA.
 Pout ces deux commandes :
 
 ```bash
-./cmd jpa -c Foo -f "*bar@mto nbPoint dateCreation"
-./cmd jpa -c Bar -f "*foo@otm titre dateEcheance"
+springgo jpa -c Foo -f "*bar@mto nbPoint dateCreation"
+springgo jpa -c Bar -f "*foo@otm titre dateEcheance"
 ```
 
 ![projet généré](./img/project.png)
@@ -438,7 +438,7 @@ Pout ces deux commandes :
 Pour supprimer les fichiers de configuration de entités JPA et ne donc par régénérer les classes chaque fois, lancez la commande suivante : 
 
 ```bash
-./cmd jpa -clear
+springgo jpa -clear
 ```
 
 ### Générer des interfaces et des services le module HTTP de Angular
@@ -446,7 +446,7 @@ Pour supprimer les fichiers de configuration de entités JPA et ne donc par rég
 La commande est extrêmement simple :
 
 ```bash
-./cmd ng
+springgo ng
 ```
 Cela va générer, dans le dossier précisé dans spring-parameters.json, les interfaces et les services correspondants aux controllers et Dtos du back.
 

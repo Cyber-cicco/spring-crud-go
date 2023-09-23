@@ -36,21 +36,6 @@ import java.util.List;`,
     private final {%class_name%}{%repository_suffix%} {%class_name_lower%}{%repository_suffix%};
     private final {%class_name%}{%mapper_suffix%} {%class_name_lower%}{%mapper_suffix%};
 
-    public {%class_name%}{%dto_suffix%} supprimer({%class_name%}{%dto_suffix%} dto){
-        return null;
-    };
-
-    public {%class_name%}{%dto_suffix%} changer({%class_name%}{%dto_suffix%} dto){
-        return null;
-    }
-
-    public List<{%class_name%}{%dto_suffix%}> recuperer(){
-        return null;
-    }   
-
-    public {%class_name%}{%dto_suffix%} creer({%class_name%}{%dto_suffix%} dto){
-        return null;
-    }
 `,
 }
 
