@@ -47,6 +47,13 @@ Alternatively, you can clone the repo, go into the spring-cli folder, and run:
 ```bash
 go install
 ```
+This will create a exectuable in  `~/go/bin/`, assuming `~` is your home folder. 
+You need to have go installed for this to work
+
+### Initializing a Project
+
+Assuming you have chosen the alias 'springgo,' run the following command at the root of a Spring Boot project:
+
 This will create a `templates/` folder containing text format templates for each element of a class in a corresponding folder. For example, a Repository will have a `templates/Repository/` folder where you will find a file named `ClassType.txt` containing just the word.
 ```
 interface
